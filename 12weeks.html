@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12周执行追踪 — 江涛</title>
+<meta name="description" content="12周平衡型时间安排执行追踪仪表板">
+<link rel="stylesheet" href="style.css">
+<style>
+  .tracking-hero { padding: 60px 0 40px; }
+  .tracking-hero h1 { font-size: 24px; font-weight: 500; margin-bottom: 8px; }
+  .tracking-hero .meta { font-size: 14px; color: var(--text-tertiary); margin-bottom: 6px; }
+  .tracking-hero .rhythm-badge {
+    display: inline-block; font-size: 12px; background: var(--accent-bg);
+    color: var(--accent-text); padding: 4px 12px; border-radius: 20px; font-weight: 500;
+  }
+
+  .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .status-card {
+    background: var(--bg-primary); border: 0.5px solid var(--border);
+    border-radius: var(--radius-md); padding: 20px; text-align: center;
+  }
+  .status-card .icon { font-size: 28px; margin-bottom: 8px; }
+  .status-card .label { font-size: 13px; color: var(--text-secondary); font-weight: 500; margin-bottom: 4px; }
+  .status-card .value { font-size: 13px; color: var(--text-tertiary); margin-bottom: 8px; }
+  .status-card .badge {
+    display: inline-block; font-size: 12px; padding: 3px 12px; border-radius: 20px; font-weight: 500;
+  }
+  .badge-done { background: #d3f9d8; color: #2b8a3e; }
+  .badge-pending { background: #f1f3f5; color: #868e96; }
+
+  .progress-section { margin-bottom: 24px; }
+  .progress-row {
+    display: flex; align-items: center; padding: 8px 0; gap: 14px;
+    font-size: 13px;
+  }
+  .progress-label { width: 80px; color: var(--text-secondary); flex-shrink: 0; }
+  .progress-bar-wrap { flex: 1; height: 6px; background: #f1f3f5; border-radius: 3px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+  .progress-num { width: 50px; text-align: right; font-weight: 500; color: var(--text-secondary); flex-shrink: 0; }
+
+  .today-task { background: var(--accent-bg); border: 0.5px solid var(--accent-border); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 24px; }
+  .today-task .tt-label { font-size: 12px; color: var(--accent-text); font-weight: 500; margin-bottom: 6px; }
+  .today-task .tt-content { font-size: 14px; color: var(--text-primary); line-height: 1.7; }
+
+  .week-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .week-table th { text-align: left; padding: 8px 12px; color: var(--text-tertiary); font-weight: 500; border-bottom: 0.5px solid var(--border); font-size: 12px; }
+  .week-table td { padding: 8px 12px; border-bottom: 0.5px solid var(--border); color: var(--text-secondary); }
+  .week-table .day-name { font-weight: 500; color: var(--text-primary); width: 50px; }
+  .week-table .mark-done { color: #2b8a3e; font-weight: 500; }
+  .week-table .mark-today { background: var(--accent-bg); }
+
+  .work-grid { display: grid; gap: 12px; }
+  .work-item {
+    padding: 14px 18px; border: 0.5px solid var(--border); border-radius: var(--radius-md);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .work-item .wi-name { font-size: 14px; font-weight: 500; }
+  .work-item .wi-meta { font-size: 12px; color: var(--text-tertiary); }
+  .work-item .wi-phase { font-size: 12px; color: var(--accent-text); background: var(--accent-bg); padding: 3px 10px; border-radius: 20px; }
+  .work-item.core { border-left: 3px solid var(--accent-text); }
+
+  .back-link { text-align: center; padding: 32px 0; }
+  .back-link a { font-size: 13px; color: var(--text-tertiary); text-decoration: none; }
+  .back-link a:hover { color: var(--text-primary); }
+
+  .update-time { text-align: center; font-size: 12px; color: var(--text-tertiary); padding-bottom: 20px; }
+
+  .week-review-card {
+    background: var(--bg-primary); border: 0.5px solid var(--border);
+    border-radius: var(--radius-md); padding: 20px; margin-top: 12px;
+  }
+  .week-review-card h4 { font-size: 14px; font-weight: 500; margin-bottom: 12px; color: var(--text-primary); }
+  .week-review-card .review-row { font-size: 13px; color: var(--text-secondary); padding: 4px 0; display: flex; gap: 8px; }
+  .week-review-card .review-label { color: var(--text-tertiary); width: 80px; flex-shrink: 0; }
+
+  @media (max-width: 768px) {
+    .status-grid { grid-template-columns: 1fr; }
+    .tracking-hero { padding: 40px 0 28px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-logo">江涛</div>
+    <div class="nav-links">
+      <a href="index.html">主页</a>
+      <a href="12weeks.html" style="color:var(--text-primary);">12周追踪</a>
+    </div>
+  </div>
+</nav>
+
+<section class="tracking-hero">
+  <div class="container">
+    <h1 id="page-title">12周执行追踪</h1>
+    <div class="meta" id="page-meta"></div>
+    <span class="rhythm-badge" id="rhythm-badge"></span>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+
+    <!-- 今日任务建议 -->
+    <div class="today-task" id="today-task" style="display:none;">
+      <div class="tt-label">💡 今日主业建议</div>
+      <div class="tt-content" id="today-task-content"></div>
+    </div>
+
+    <!-- 今日三类任务 -->
+    <div class="status-grid" id="status-grid"></div>
+
+    <!-- 本周进度 -->
+    <div class="progress-section" id="progress-section"></div>
+
+    <!-- 本周每天 -->
+    <div style="margin-top:28px;">
+      <h3 style="font-size:14px;font-weight:500;margin-bottom:12px;color:var(--text-primary);">本周明细</h3>
+      <table class="week-table" id="week-table">
+        <thead><tr><th></th><th>节奏</th><th>运动</th><th>AI推进</th><th>关系</th></tr></thead>
+        <tbody id="week-table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- 重点工作 -->
+    <div style="margin-top:32px;">
+      <h3 style="font-size:14px;font-weight:500;margin-bottom:14px;color:var(--text-primary);">主业重点工作</h3>
+      <div class="work-grid" id="work-grid"></div>
+    </div>
+
+    <!-- 周复盘 -->
+    <div style="margin-top:32px;" id="weekly-review-section">
+      <h3 style="font-size:14px;font-weight:500;margin-bottom:14px;color:var(--text-primary);">最新周复盘</h3>
+      <div id="weekly-review-content"></div>
+    </div>
+
+  </div>
+</section>
+
+<div class="back-link">
+  <a href="index.html">← 返回主页</a>
+</div>
+
+<div class="update-time" id="update-time"></div>
+
+<script src="tracking-data.js"></script>
+<script>
+(function() {
+  const D = window.TRACKING_DATA;
+  if (!D) { document.body.innerHTML = '<p style="text-align:center;padding:60px;">数据加载中...</p>'; return; }
+
+  const t = D.today;
+  const w = D.week;
+  const tip = D.tip;
+
+  // Header
+  document.getElementById('page-title').textContent = `第 ${t.week} 周 · 12周执行追踪`;
+  document.getElementById('page-meta').textContent = `${t.date} ${t.weekday} · ${D.plan.start} → ${D.plan.end}`;
+  document.getElementById('rhythm-badge').textContent = t.rhythm || '执行中';
+
+  // Today task tip
+  if (tip && tip.tip) {
+    document.getElementById('today-task').style.display = 'block';
+    document.getElementById('today-task-content').innerHTML = 
+      `<strong>${tip.tip}</strong><br>优先服务：${tip.focus} · ${tip.action}`;
+  }
+
+  // Status cards
+  function makeCard(icon, label, goal, value, isDone) {
+    return `<div class="status-card">
+      <div class="icon">${icon}</div>
+      <div class="label">${label}</div>
+      <div class="value">${goal}</div>
+      <span class="badge ${isDone ? 'badge-done' : 'badge-pending'}">${isDone ? '✓ 已完成' : '待完成'}</span>
+    </div>`;
+  }
+
+  document.getElementById('status-grid').innerHTML = 
+    makeCard('🏃', '轻运动', '10-25分钟', t.exercise, !!t.exercise) +
+    makeCard('🤖', 'AI/赚钱推进', '20:00-21:20', t.ai_push, !!t.ai_push) +
+    makeCard('💑', '关系触达', '主动联系/对话', t.relation, !!t.relation);
+
+  // Progress bars
+  function makeProgress(icon, label, current, target) {
+    const pct = Math.min(100, (current / target) * 100);
+    let color = '#e03131';
+    if (pct >= 100) color = '#2b8a3e';
+    else if (pct >= 50) color = '#f08c00';
+    return `<div class="progress-row">
+      <span class="progress-label">${icon} ${label}</span>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%;background:${color};"></div></div>
+      <span class="progress-num">${current}/${target}</span>
+    </div>`;
+  }
+
+  document.getElementById('progress-section').innerHTML =
+    makeProgress('🏃', '运动', w.exercise, w.exercise_target) +
+    makeProgress('🤖', 'AI推进', w.ai, w.ai_target) +
+    makeProgress('💑', '陪伴', w.relation, w.relation_target);
+
+  // Week table
+  const todayDate = t.date;
+  document.getElementById('week-table-body').innerHTML = (w.days || []).map(d => {
+    const isToday = d.date === todayDate;
+    return `<tr class="${isToday ? 'mark-today' : ''}">
+      <td class="day-name">${d.weekday}</td>
+      <td>${d.rhythm || '-'}</td>
+      <td class="${d.exercise ? 'mark-done' : ''}">${d.exercise || '—'}</td>
+      <td class="${d.ai_push ? 'mark-done' : ''}">${d.ai_push || '—'}</td>
+      <td class="${d.relation ? 'mark-done' : ''}">${d.relation || '—'}</td>
+    </tr>`;
+  }).join('');
+
+  // Work items
+  document.getElementById('work-grid').innerHTML = (D.work_items || []).map(w => 
+    `<div class="work-item ${w.level === '核心' ? 'core' : ''}">
+      <div><div class="wi-name">${w.name}</div><div class="wi-meta">${w.clients}</div></div>
+      <span class="wi-phase">${w.phase}</span>
+    </div>`
+  ).join('');
+
+  // Weekly review - show latest non-empty
+  const reviews = (D.weekly || []).filter(r => r.main_achievement || r.ai_deliverable);
+  if (reviews.length > 0) {
+    const latest = reviews[reviews.length - 1];
+    document.getElementById('weekly-review-content').innerHTML = 
+      `<div class="week-review-card">
+        <h4>${latest.week} · ${latest.date_range}</h4>
+        <div class="review-row"><span class="review-label">主业成果</span><span>${latest.main_achievement || '—'}</span></div>
+        <div class="review-row"><span class="review-label">AI可交付</span><span>${latest.ai_deliverable || '—'}</span></div>
+        <div class="review-row"><span class="review-label">运动天数</span><span>${latest.exercise_days}/5</span></div>
+        <div class="review-row"><span class="review-label">AI次数</span><span>${latest.ai_count}/3</span></div>
+        <div class="review-row"><span class="review-label">陪伴次数</span><span>${latest.relation_count}/1</span></div>
+        <div class="review-row"><span class="review-label">下周微调</span><span>${latest.next_tweak || '—'}</span></div>
+      </div>`;
+  } else {
+    document.getElementById('weekly-review-content').innerHTML = 
+      '<p style="font-size:13px;color:var(--text-tertiary);">暂无周复盘数据</p>';
+  }
+
+  // Update time
+  document.getElementById('update-time').textContent = `数据更新于 ${D.generated_at}`;
+})();
+</script>
+
+</body>
+</html>
