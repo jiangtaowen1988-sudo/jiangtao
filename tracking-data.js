@@ -1,10 +1,10 @@
 window.TRACKING_DATA = {
-  "generated_at": "2026-06-17 12:48:33",
+  "generated_at": "2026-06-21 16:05:50",
   "today": {
-    "date": "2026-06-17",
-    "weekday": "周三",
+    "date": "2026-06-21",
+    "weekday": "周日",
     "week": 1,
-    "rhythm": "关系优先夜",
+    "rhythm": "周复盘 + 陪伴",
     "main_task": "",
     "exercise": "",
     "ai_push": "",
@@ -123,11 +123,7 @@ window.TRACKING_DATA = {
   "streak": {
     "exercise_days": 0
   },
-  "tip": {
-    "tip": "关系优先夜，白天推动内部评审类事项",
-    "focus": "AI座舱内部迭代",
-    "action": "写MRD/PRD/启动节点推进"
-  },
+  "tip": {},
   "work_items": [
     {
       "level": "核心",
@@ -203,7 +199,7 @@ window.TRACKING_DATA = {
   "overview": {
     "平衡型时间安排：12 周执行总览": "",
     "开始日期": "2026-06-17",
-    "当前周": "1",
+    "当前周": "",
     "运动完成天数": "",
     "AI/赚钱推进次数": "",
     "高质量陪伴次数": "",
@@ -1398,7 +1394,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "未达标",
       "next_tweak": ""
     },
     {
@@ -1410,7 +1406,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1422,7 +1418,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1434,7 +1430,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1446,7 +1442,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1458,7 +1454,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1470,7 +1466,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1482,7 +1478,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1494,7 +1490,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1506,7 +1502,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1518,7 +1514,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     },
     {
@@ -1530,7 +1526,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "调整",
+      "passed": "",
       "next_tweak": ""
     }
   ],
@@ -1538,6 +1534,6 @@ window.TRACKING_DATA = {
     "start": "2026-06-17",
     "end": "2026-09-08",
     "total_days": 84,
-    "days_elapsed": 0
+    "days_elapsed": 4
   }
 };
