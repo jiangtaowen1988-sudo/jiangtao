@@ -77,3 +77,33 @@ if (wechatBtn && qrOverlay) {
         }
     });
 }
+
+// 加载今日推荐
+(async function loadRecommendations() {
+    const grid = document.getElementById('recGrid');
+    const dateEl = document.getElementById('recDate');
+    if (!grid) return;
+
+    try {
+        const res = await fetch('recommendations.json');
+        if (!res.ok) throw new Error('fetch failed');
+        const data = await res.json();
+
+        if (dateEl) {
+            dateEl.textContent = '· ' + data.updated;
+        }
+
+        grid.innerHTML = data.articles.map(a => `
+            <div class="rec-card">
+                <div class="rec-source">${a.source}</div>
+                <h3><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></h3>
+                <p class="rec-summary">${a.summary}</p>
+                <div class="rec-tags">
+                    ${a.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                </div>
+            </div>
+        `).join('');
+    } catch (e) {
+        grid.innerHTML = '<div class="rec-loading"><p>推荐文章加载失败，稍后再试</p></div>';
+    }
+})();
