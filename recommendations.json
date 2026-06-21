@@ -1,29 +1,30 @@
 {
   "updated": "2026-06-21",
+  "source": "微信公众号",
   "articles": [
     {
-      "title": "2026 国内端侧 AI 赛道标杆解析：谁在领跑边缘智能新赛道",
-      "url": "https://www.ithome.com/0/952/818.htm",
-      "source": "IT之家",
-      "summary": "深度拆解端侧AI芯片、模型、应用三层格局，对比华为昇腾、地平线、高通等玩家策略。核心论点：2025-2026年是AI从云端集中训练走向端侧分布式推理的拐点，低延迟+高安全+低功耗三重优势推动端侧部署加速。",
-      "tags": ["端侧AI", "行业分析", "芯片"],
-      "date": "2026-06"
+      "title": "2026 智能座舱 AI Agent演进趋势及3大案例分析报告",
+      "url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS-3Gvnu31hEZQ8tDsJvnrLMWnD1hTGqTd1qXa8Fplpd9c1cHCFHN-psNyNjgl_7Mou7ivSx98ZXfKlJSK8Wp9jP1ipakvt-TurFc4j1MfkXqrnpV9qvDUYYq0ncomkE8BeHhIBVt2KFVlIqV7_JjuJ-i4UAPG8UvC4f8N7_AhvgFIdKyMuPLBhBy7ZIck9hAJNrfYsIqT3gQU6qWBfZYll_drgozfSg6bw",
+      "source": "AI新知汇",
+      "summary": "佐思汽研报告系统拆解了智能座舱AI Agent的三大演进方向：情感引擎化、全场景跨端协同、任务自主化。以商汤绝影、蔚来NOMI、小米超级小爱为标杆案例，展示座舱AI正从被动语音助手走向能理解需求、辅助决策的主动智能体。",
+      "tags": ["AI座舱", "AI Agent", "行业报告"],
+      "date": "2026-06-21"
     },
     {
-      "title": "AI驱动创业新范式：\"一人公司\"为何风靡科创圈",
-      "url": "https://www.cnr.cn/jingji/txcj/20260414/t20260414_527584876.shtml",
-      "source": "央广网",
-      "summary": "央广经济之声深度调查，覆盖北京中关村、上海张江、深圳南山等科创聚集地。揭示AI工具如何让个人创业者以\"低成本、快响应\"模式独立运营公司，分析一人公司的商业逻辑、行业分布和挑战。",
-      "tags": ["一人公司", "AI创业", "商业模式"],
-      "date": "2026-04"
+      "title": "2026 中国大模型芯片新锐企业 TOP 30",
+      "url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS-3Gvnu31hEZbjik7m1eyDgWnD1hTGqTd1qXa8Fplpd9x-YexFNToe6BZehEAs-srfVBiIoMy8xgTCtSRUYi5M2caB1PJMjt658L1JsPj8YGQ04axqlqgLh788YEMpHcLQ37hWk8yXnwqbMX-1Bl5BHdh3tXUeKspIwqefekieoYEBFObwfGkL6iK_KZcUUkPGNwurmyx2C5e53lbl3jUode0WC6Sbi7DA",
+      "source": "学客汇",
+      "summary": "覆盖通用GPU、数据流架构、端侧推理三条技术路线，盘点寒武纪、壁仞、摩尔线程、地平线等30家国产大模型芯片企业。重点关注端侧大模型部署赛道的新锐玩家，数据流架构公司预计2026年6月推出端侧产品。",
+      "tags": ["端侧AI", "芯片", "产业图谱"],
+      "date": "2026-06-20"
     },
     {
-      "title": "2026北京车展剧透：车载AI迈入\"主动关怀\"智能体时代",
-      "url": "https://post.smzdm.com/p/az843lqn/",
-      "source": "什么值得买·汽车",
-      "summary": "火山引擎基于Agentic AI架构打造\"感知-推理-执行-记忆-学习\"闭环，豆包座舱助手已覆盖50品牌145款车型。智己IM Fusion Nova架构从底层打通线控底盘、智驾AI与智舱AI，实现全域意图驱动。AI座舱正从语音指令走向多模态主动感知。",
-      "tags": ["AI座舱", "智能体", "北京车展"],
-      "date": "2026-06"
+      "title": "苏州将AI Agent与一人公司(OPC)并列，超级个体的创业新时代来了",
+      "url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS-3Gvnu31hEZbjik7m1eyDgWnD1hTGqTd1qXa8Fplpd9RewUlCYAkvPF1S3uZrpM4O_A74QhOSmLiKULwoOzjHL56QXRPTQ2fwhAh7VoYz_vTT_E6xq0BENZvKrOlYfU5s5kTyG8tor_qMWmL1RvfgV9eTxMAzond__oiicPAVHha0SBR4j7LJPiXeoLGEeNQnlnDhoMnsBHqZBDgMbGFyTP28temKTOwg",
+      "source": "盈盈声播",
+      "summary": "苏州率先将AI Agent与一人公司（OPC）并列作为产业政策重点，意味着OPC从草根创业现象正式进入政府创新体系。文章分析此举对超级个体创业者的实际影响：注册便利化、政策扶持、生态配套。",
+      "tags": ["一人公司", "AI创业", "政策"],
+      "date": "2026-06-20"
     }
   ]
 }
