@@ -1,29 +1,29 @@
 {
   "updated": "2026-06-21",
-  "source": "微信公众号",
+  "source": "量子位 × 晚点LatePost",
   "articles": [
     {
-      "title": "2026 智能座舱 AI Agent演进趋势及3大案例分析报告",
-      "url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS-3Gvnu31hEZQ8tDsJvnrLMWnD1hTGqTd1qXa8Fplpd9c1cHCFHN-psNyNjgl_7Mou7ivSx98ZXfKlJSK8Wp9jP1ipakvt-TurFc4j1MfkXqrnpV9qvDUYYq0ncomkE8BeHhIBVt2KFVlIqV7_JjuJ-i4UAPG8UvC4f8N7_AhvgFIdKyMuPLBhBy7ZIck9hAJNrfYsIqT3gQU6qWBfZYll_drgozfSg6bw",
-      "source": "AI新知汇",
-      "summary": "佐思汽研报告系统拆解了智能座舱AI Agent的三大演进方向：情感引擎化、全场景跨端协同、任务自主化。以商汤绝影、蔚来NOMI、小米超级小爱为标杆案例，展示座舱AI正从被动语音助手走向能理解需求、辅助决策的主动智能体。",
-      "tags": ["AI座舱", "AI Agent", "行业报告"],
+      "title": "具身赛道现状素描：脑子灵，模型好，不是百亿，就是独角",
+      "url": "https://www.qbitai.com/2026/06/437198.html",
+      "source": "量子位",
+      "summary": "2026年还没过半，具身智能融资就要超过去年全年，超过一半的钱流入机器人大脑。拆解Figure、银河通用、宇树等头部玩家的融资数据和技术路线，揭示端侧AI在机器人赛道正迎来爆发拐点。",
+      "tags": ["具身智能", "端侧AI", "融资"],
       "date": "2026-06-21"
     },
     {
-      "title": "2026 中国大模型芯片新锐企业 TOP 30",
-      "url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS-3Gvnu31hEZbjik7m1eyDgWnD1hTGqTd1qXa8Fplpd9x-YexFNToe6BZehEAs-srfVBiIoMy8xgTCtSRUYi5M2caB1PJMjt658L1JsPj8YGQ04axqlqgLh788YEMpHcLQ37hWk8yXnwqbMX-1Bl5BHdh3tXUeKspIwqefekieoYEBFObwfGkL6iK_KZcUUkPGNwurmyx2C5e53lbl3jUode0WC6Sbi7DA",
-      "source": "学客汇",
-      "summary": "覆盖通用GPU、数据流架构、端侧推理三条技术路线，盘点寒武纪、壁仞、摩尔线程、地平线等30家国产大模型芯片企业。重点关注端侧大模型部署赛道的新锐玩家，数据流架构公司预计2026年6月推出端侧产品。",
-      "tags": ["端侧AI", "芯片", "产业图谱"],
+      "title": "字节跳动的 AI 账本：豆包每天不足百万收入、Seedance 毛利 70%",
+      "url": "https://www.latepost.com/news/dj_detail?id=3600",
+      "source": "晚点LatePost",
+      "summary": "独家披露字节跳动AI产品商业化数据——豆包日收入不足百万，视频生成产品Seedance毛利高达70%。揭示AI产品在免费市场中重建付费意愿的真实困境：用户量大但买单难。",
+      "tags": ["AI商业化", "字节跳动", "产品"],
       "date": "2026-06-20"
     },
     {
-      "title": "苏州将AI Agent与一人公司(OPC)并列，超级个体的创业新时代来了",
-      "url": "https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgS-3Gvnu31hEZbjik7m1eyDgWnD1hTGqTd1qXa8Fplpd9RewUlCYAkvPF1S3uZrpM4O_A74QhOSmLiKULwoOzjHL56QXRPTQ2fwhAh7VoYz_vTT_E6xq0BENZvKrOlYfU5s5kTyG8tor_qMWmL1RvfgV9eTxMAzond__oiicPAVHha0SBR4j7LJPiXeoLGEeNQnlnDhoMnsBHqZBDgMbGFyTP28temKTOwg",
-      "source": "盈盈声播",
-      "summary": "苏州率先将AI Agent与一人公司（OPC）并列作为产业政策重点，意味着OPC从草根创业现象正式进入政府创新体系。文章分析此举对超级个体创业者的实际影响：注册便利化、政策扶持、生态配套。",
-      "tags": ["一人公司", "AI创业", "政策"],
+      "title": "解密 AI 版支付宝，20 年来最大改版即将发布",
+      "url": "https://www.latepost.com/news/dj_detail?id=3599",
+      "source": "晚点LatePost",
+      "summary": "支付宝20年来最大改版，核心是AI原生重构。深度剖析超级App的AI改造路径——从功能嵌入到AI原生交互，对支付、金融、生活服务的全线影响，以及马云亲自过问的项目内幕。",
+      "tags": ["AI平台", "超级App", "金融科技"],
       "date": "2026-06-20"
     }
   ]
