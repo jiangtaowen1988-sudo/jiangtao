@@ -1,30 +1,30 @@
 {
-  "updated": "2026-06-21",
+  "updated": "2026-06-23",
   "source": "量子位 × 晚点LatePost",
   "articles": [
     {
-      "title": "具身赛道现状素描：脑子灵，模型好，不是百亿，就是独角",
-      "url": "https://www.qbitai.com/2026/06/437198.html",
+      "title": "DeepSeek缺Agent人才缺疯了！负责人各种贴广告",
+      "url": "https://www.qbitai.com/2026/06/437249.html",
       "source": "量子位",
-      "summary": "2026年还没过半，具身智能融资就要超过去年全年，超过一半的钱流入机器人大脑。拆解Figure、银河通用、宇树等头部玩家的融资数据和技术路线，揭示端侧AI在机器人赛道正迎来爆发拐点。",
-      "tags": ["具身智能", "端侧AI", "融资"],
-      "date": "2026-06-21"
+      "summary": "DeepSeek Harness部门负责人崔添翼（前Jane Street）连招一个多月没招够人，新设研究员、工程师、产品经理三类岗位。文章提出公式Model+Harness=Agent，揭示大模型下半场已从抢研究员转向抢能融合研究、工程、产品的Agent复合型人才。",
+      "tags": ["AI Agent", "人才市场", "DeepSeek"],
+      "date": "2026-06-22"
     },
     {
-      "title": "字节跳动的 AI 账本：豆包每天不足百万收入、Seedance 毛利 70%",
-      "url": "https://www.latepost.com/news/dj_detail?id=3600",
-      "source": "晚点LatePost",
-      "summary": "独家披露字节跳动AI产品商业化数据——豆包日收入不足百万，视频生成产品Seedance毛利高达70%。揭示AI产品在免费市场中重建付费意愿的真实困境：用户量大但买单难。",
-      "tags": ["AI商业化", "字节跳动", "产品"],
-      "date": "2026-06-20"
+      "title": "AI硬件席卷618，钉钉A1包揽天猫、抖音、京东销量冠军",
+      "url": "https://www.qbitai.com/2026/06/437308.html",
+      "source": "量子位",
+      "summary": "钉钉首款AI硬件A1在618全周期拿下天猫、抖音、京东三大平台AI录音设备销量第一。独立开发者、AI Coding爱好者、副业创业者成为核心消费群体，AI硬件从极客玩具走向生产力标配，端侧AI消费端正在形成新品类。",
+      "tags": ["AI硬件", "端侧AI", "消费电子"],
+      "date": "2026-06-22"
     },
     {
-      "title": "解密 AI 版支付宝，20 年来最大改版即将发布",
-      "url": "https://www.latepost.com/news/dj_detail?id=3599",
+      "title": "Liblib母公司完成近3亿美元融资，国内AI应用终于有了"大标的"",
+      "url": "https://www.latepost.com/news/dj_detail?id=3601",
       "source": "晚点LatePost",
-      "summary": "支付宝20年来最大改版，核心是AI原生重构。深度剖析超级App的AI改造路径——从功能嵌入到AI原生交互，对支付、金融、生活服务的全线影响，以及马云亲自过问的项目内幕。",
-      "tags": ["AI平台", "超级App", "金融科技"],
-      "date": "2026-06-20"
+      "summary": "演语科技（Evoken）B+轮融资近3亿美元、估值超20亿美元，ARR突破3亿美元，创国内AI应用赛道融资记录。创始人陈冕（92年，前字节剪映/CapCut商业化负责人）提出"垂直AI应用本质是行业交互方式+行业经验数据决定context"，并采用Liblib AI、LibTV、星流Agent的矩阵产品策略避开巨头主航道。",
+      "tags": ["AI应用", "融资", "AI商业化"],
+      "date": "2026-06-18"
     }
   ]
 }
