@@ -1,30 +1,30 @@
 {
-  "updated": "2026-06-23",
+  "updated": "2026-06-30",
   "source": "量子位 × 晚点LatePost",
   "articles": [
     {
-      "title": "DeepSeek缺Agent人才缺疯了！负责人各种贴广告",
-      "url": "https://www.qbitai.com/2026/06/437249.html",
+      "title": "第一批一人公司，现在怎么样了？",
+      "url": "https://www.qbitai.com/2026/06/439237.html",
       "source": "量子位",
-      "summary": "DeepSeek Harness部门负责人崔添翼（前Jane Street）连招一个多月没招够人，新设研究员、工程师、产品经理三类岗位。文章提出公式Model+Harness=Agent，揭示大模型下半场已从抢研究员转向抢能融合研究、工程、产品的Agent复合型人才。",
-      "tags": ["AI Agent", "人才市场", "DeepSeek"],
-      "date": "2026-06-22"
+      "summary": "量子位深度访谈多位OPC创业者：独立开发者超级峰用AI编程两周发40+版本，前微软PM Kelly用Agent构建两层管理架构实现"人指挥Agent"组织形态，Solo VC阮飞用AI对抗合伙人辅助投资决策。核心发现是OPC未消灭组织，反而催生园区/平台/临时协作网络等新组织形态；投资人更看重AI Native架构而非Solo Founder身份，约80%园区签约主体仅一人。",
+      "tags": ["一人公司", "AI Agent", "AI创业"],
+      "date": "2026-06-27"
     },
     {
-      "title": "AI硬件席卷618，钉钉A1包揽天猫、抖音、京东销量冠军",
-      "url": "https://www.qbitai.com/2026/06/437308.html",
+      "title": "CVPR 2026最热方向，被一家杭州团队率先跑进了端侧！全球首个端侧流式多模态来了",
+      "url": "https://www.qbitai.com/2026/06/439236.html",
       "source": "量子位",
-      "summary": "钉钉首款AI硬件A1在618全周期拿下天猫、抖音、京东三大平台AI录音设备销量第一。独立开发者、AI Coding爱好者、副业创业者成为核心消费群体，AI硬件从极客玩具走向生产力标配，端侧AI消费端正在形成新品类。",
-      "tags": ["AI硬件", "端侧AI", "消费电子"],
-      "date": "2026-06-22"
+      "summary": "杭州Om AI发布全球首个端侧流式多模态模型VLX系列（Flow/Seek/Go），完整构建感知→定位→行动能力闭环，可跑进手机、无人机、机器人。Day1端侧原生架构实现Flow单路视频0.06秒处理、Go仅0.6B参数实时导航优于更大模型、Seek以3B模型效果超越更大通用模型。团队前作VLM-R1曾48小时登顶GitHub全球趋势榜。",
+      "tags": ["端侧AI", "具身智能", "多模态"],
+      "date": "2026-06-27"
     },
     {
-      "title": "Liblib母公司完成近3亿美元融资，国内AI应用终于有了\u201c大标的\u201d",
-      "url": "https://www.latepost.com/news/dj_detail?id=3601",
+      "title": "独家丨比亚迪自研智驾芯片预计2027年首搭量产车型",
+      "url": "https://www.latepost.com/news/dj_detail?id=3614",
       "source": "晚点LatePost",
-      "summary": "演语科技（Evoken）B+轮融资近3亿美元、估值超20亿美元，ARR突破3亿美元，创国内AI应用赛道融资记录。创始人陈冕（92年，前字节剪映/CapCut商业化负责人）提出\u201c垂直AI应用本质是行业交互方式+行业经验数据决定context\u201d，并采用Liblib AI、LibTV、星流Agent的矩阵产品策略避开巨头主航道。",
-      "tags": ["AI应用", "融资", "AI商业化"],
-      "date": "2026-06-18"
+      "summary": "晚点独家获悉，比亚迪4nm自研智驾芯片璇玑A3计划2027年首搭腾势品牌量产车型，单颗算力超700 TOPS、三颗协同超2100 TOPS，支持L3/L4自动驾驶。单位算力功耗较同级低20%，结合自研算法后算力利用率提升100%，芯片研发团队超7000人，标志着车企垂直整合从电池延伸至智驾芯片核心环节。",
+      "tags": ["AI座舱", "智驾芯片", "端侧AI"],
+      "date": "2026-06-28"
     }
   ]
 }
