@@ -1,10 +1,10 @@
 window.TRACKING_DATA = {
-  "generated_at": "2026-07-01 15:55:18",
+  "generated_at": "2026-07-04 16:34:50",
   "today": {
-    "date": "2026-07-01",
-    "weekday": "周三",
+    "date": "2026-07-04",
+    "weekday": "周六",
     "week": 3,
-    "rhythm": "关系优先夜",
+    "rhythm": "半天深度块 / 陪伴",
     "main_task": "",
     "exercise": "",
     "ai_push": "",
@@ -123,11 +123,7 @@ window.TRACKING_DATA = {
   "streak": {
     "exercise_days": 0
   },
-  "tip": {
-    "tip": "关系优先夜，白天推动内部评审类事项",
-    "focus": "AI座舱内部迭代",
-    "action": "写MRD/PRD/启动节点推进"
-  },
+  "tip": {},
   "work_items": [
     {
       "level": "核心",
@@ -1538,6 +1534,6 @@ window.TRACKING_DATA = {
     "start": "2026-06-17",
     "end": "2026-09-08",
     "total_days": 84,
-    "days_elapsed": 14
+    "days_elapsed": 17
   }
 };
