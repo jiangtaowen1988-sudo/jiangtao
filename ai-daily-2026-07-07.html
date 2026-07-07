@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI HOT 日报 — 2026年7月7日</title>
+<style>
+:root {
+  --bg: #f4f6f9;
+  --card-bg: #ffffff;
+  --hero-bg: #111827;
+  --hero-accent: #3b82f6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border: #e5e7eb;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --chip-bg: #eff6ff;
+  --chip-text: #2563eb;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.hero {
+  background: var(--hero-bg);
+  color: #fff;
+  padding: 48px 24px 44px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(59,130,246,.18), transparent);
+  pointer-events: none;
+}
+.hero-inner { position: relative; max-width: 720px; margin: 0 auto; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(59,130,246,.2);
+  color: #93c5fd;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  letter-spacing: .5px;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -.5px;
+  margin-bottom: 8px;
+}
+.hero-date {
+  font-size: 15px;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+.hero-update {
+  font-size: 12px;
+  color: #fbbf24;
+  margin-bottom: 24px;
+  background: rgba(251,191,36,.12);
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-label { font-size: 13px; color: #9ca3af; margin-top: 2px; }
+.hero-section-tags {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.hero-section-tag {
+  font-size: 12px;
+  padding: 3px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.08);
+  color: #d1d5db;
+  border: 1px solid rgba(255,255,255,.1);
+}
+
+.nav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  backdrop-filter: blur(10px);
+}
+.nav {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav a {
+  flex-shrink: 0;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.nav a:hover { background: var(--bg); color: var(--text-primary); }
+.nav a.active { background: #111827; color: #fff; }
+.nav-count { font-size: 11px; opacity: .6; margin-left: 4px; }
+
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+.section { margin-bottom: 48px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+.section-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.section-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  border: 1px solid var(--border);
+  transition: box-shadow .2s, transform .2s;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
+}
+.card-new .card-header::after {
+  content: 'NEW';
+  background: #fbbf24;
+  color: #111827;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+.card-num {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #111827;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.45;
+  flex: 1;
+}
+.card-source {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.card-summary {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  flex: 1;
+  margin-bottom: 14px;
+}
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.card-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hero-accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color .2s;
+}
+.card-link:hover { color: #1d4ed8; }
+.card-link svg { width: 14px; height: 14px; }
+
+.empty-section {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-muted);
+}
+.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: .5; }
+.empty-text { font-size: 15px; }
+
+.footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px 48px;
+  text-align: center;
+}
+.footer-inner {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+.footer-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 2;
+}
+.footer-text a {
+  color: var(--hero-accent);
+  text-decoration: none;
+}
+.footer-text a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+  .hero { padding: 36px 16px 32px; }
+  .hero h1 { font-size: 26px; }
+  .hero-stats { gap: 20px; }
+  .stat-num { font-size: 26px; }
+  .cards { grid-template-columns: 1fr; }
+  .section { margin-bottom: 36px; }
+}
+@media (max-width: 480px) {
+  .hero h1 { font-size: 22px; }
+  .hero-stats { gap: 16px; }
+  .stat-num { font-size: 22px; }
+  .hero-section-tags { gap: 6px; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <span class="hero-badge">AI HOT 日报</span>
+    <h1>晨报仪表盘</h1>
+    <p class="hero-date" id="heroDate"></p>
+    <p class="hero-update" id="heroUpdate"></p>
+    <div class="hero-stats" id="heroStats"></div>
+    <div class="hero-section-tags" id="heroTags"></div>
+  </div>
+</header>
+
+<nav class="nav-wrap">
+  <div class="nav" id="navLinks"></div>
+</nav>
+
+<main class="main" id="mainContent"></main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-text" id="footerText"></p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  var SECTION_LABELS = ['模型发布/更新','产品发布/更新','行业动态','论文研究','技巧与观点'];
+  var SECTION_SLUGS = ['ai-models','ai-products','industry','paper','tip'];
+  var SECTION_ICONS = ['🤖','🚀','📡','📄','💡'];
+  var SECTION_COLORS = ['#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444'];
+
+  // Merged data: daily base + today's selected items (11 new, 0 overlap)
+  var sections = [
+    { // 模型发布/更新
+      items: [
+        {title:"Fun-ASR-Realtime 发布：单模型支持30种语言与16种方言，识别准确率领先",source:"通义实验室",summary:"通义实验室发布Fun-ASR-Realtime实时语音识别模型，单模型覆盖30种语言及16种方言，语义准确率87.8%，方言接近人工水平，API已上线阿里云百炼。",url:"https://mp.weixin.qq.com/s/ntw0SliBi4f8LROnFY26kA",isNew:false}
+      ]
+    },
+    { // 产品发布/更新
+      items: [
+        {title:"OfficeCLI：为AI智能体设计的开源Office套件",source:"OfficeCLI",summary:"全球首个专为AI智能体设计的开源Office套件，单二进制运行，内置HTML渲染引擎，支持.docx/.xlsx/.pptx渲染、创建和修改，可安装到Claude Code等AI编码工具。",url:"https://github.com/iOfficeAI/OfficeCLI",isNew:false},
+        {title:"Synthetic Sciences 发布 OpenScience：开源模型无关 AI 科研工作台",source:"MarkTechPost",summary:"开源（Apache 2.0）AI 科研工作台，覆盖机器学习、生物学、物理学、化学，运行从文献到撰写的完整科研循环，支持多模型切换，内置250+可编辑技能。",url:"https://www.marktechpost.com/2026/07/05/synthetic-sciences-releases-openscience-an-open-source-model-agnostic-ai-workbench-for-machine-learning-biology-physics-and-chemistry-research",isNew:false},
+        {title:"xAI 为 Grok Voice 新增 21 个旗舰语音",source:"xAI News",summary:"xAI 发布 21 个新旗舰语音，支持25+语言和多场景定制，原生支持 Voice Agent API 和 TTS API，原有5个语音经重训练后自然度提升。",url:"https://x.ai/news/new-flagship-voices",isNew:false},
+        {title:"Claude Code v2.1.202 发布",source:"Claude Code",summary:"新增 Dynamic workflow size 设置控制智能体数量、OpenTelemetry 属性、改进 agent 列表布局和 MCP 错误消息，修复 mTLS、远程控制、语音听写等多项 Bug。",url:"https://github.com/anthropics/claude-code/releases/tag/v2.1.202",isNew:false},
+        {title:"OpenClaw 登陆 HuggingFace 本地应用",source:"OpenClaw",summary:"任意 GGUF/MLX 模型一键本地部署工具调用智能体，无云端、无密钥、无人监控，让工具调用智能体完全在本地运行。",url:"https://x.com/openclaw/status/2074187998602871212",isNew:false},
+        {title:"SGLang 集成 DSpark 推测解码",source:"LMSYS",summary:"SGLang 集成 DSpark 推测解码算法，置信度驱动的可变长度验证，支持密集和稀疏模型，在 H200 上吞吐量较基线提升 1.4-2.5 倍。",url:"https://www.lmsys.org/blog/2026-07-06-dspark-sglang",isNew:false},
+        {title:"Grok Imagine 更新：支持 15 秒视频生成",source:"xAI",summary:"Grok Imagine 更新支持15秒视频生成，画面质量令人印象深刻，需更新 Grok 应用以使用。",url:"https://x.com/elonmusk/status/2074378653501128833",isNew:true},
+        {title:"MIRA：可玩多人世界模型，20 FPS实时生成对战游戏画面",source:"General Intuition",summary:"MIRA 为可玩的多人世界模型，基于10k小时机器人数据训练，根据按键实时生成四玩家对战画面，帧率达20 FPS，由 General Intuition 与 Kyutai Labs 联合构建。",url:"https://x.com/emollick/status/2074348274136346871",isNew:true}
+      ]
+    },
+    { // 行业动态
+      items: [
+        {title:"2026年科技公司AI裁员名单：十家公司裁减数千岗位",source:"TechCrunch",summary:"2026年多家科技公司以AI为由大规模裁员，Microsoft 4800人、Oracle 21000人、Meta 8000人等，Layoffs.fyi 统计全年已裁约12万个技术岗。",url:"https://techcrunch.com/2026/07/06/the-running-list-major-tech-layoffs-in-2026-where-employers-cited-ai",isNew:false},
+        {title:"Meta 被曝让外包人员伪装未成年人测试竞品 AI 安全",source:"IT之家",summary:"Meta 通过 Covalen 让数百名外包伪装未成年人，向 ChatGPT/Gemini/Character.AI 发送4.5万个高风险提示词，测试竞品聊天机器人安全拦截。",url:"https://www.ithome.com/0/973/207.htm",isNew:false},
+        {title:"SK 海力士将启动 280 亿美元美股上市，有望成史上第二大 IPO",source:"IT之家",summary:"SK 海力士在纳斯达克发行1779万股存托凭证，募资约280亿美元，规模预计仅次于 SpaceX 的 857 亿美元 IPO，年内股价涨幅超270%。",url:"https://www.ithome.com/0/972/896.htm",isNew:false},
+        {title:"Runway 宣布设立巴黎办公室",source:"Runway",summary:"Runway 宣布在巴黎设立新办公室，拓展欧洲业务，具体部门、规模和职能尚未披露。",url:"https://runwayml.com/news/announcing-our-paris-office",isNew:false},
+        {title:"阿尔伯塔省用Claude进行政府系统安全审查",source:"Anthropic",summary:"阿尔伯塔省用50个Claude Code智能体20小时内并行审查4.66亿行代码，发现传统工具遗漏的漏洞，传统方法需约6.5年。",url:"https://www.anthropic.com/news/alberta-government-claude-cybersecurity",isNew:false},
+        {title:"Cursor 成立 CFO Council，聚焦 AI 支出新经济学",source:"Cursor",summary:"全球AI支出达1.5万亿美元，仅39%可追踪至EBIT影响。token用量最高的公司收入同比增长16.5%，不同模型族请求成本差近9倍。首次会议8月举行。",url:"https://cursor.com/blog/cfo-council",isNew:false},
+        {title:"中国拟限制外国访问最强AI模型",source:"Rohan Paul",summary:"中国计划限制外国访问最强AI模型，商务部主导出口管制，涵盖闭源和开源模型，讨论将模型泄漏视为国家安全犯罪，可能分裂全球AI市场。",url:"https://x.com/rohanpaul_ai/status/2074512389526237609",isNew:true},
+        {title:"Ethan Mollick：开放权重模型供给难持续",source:"Ethan Mollick",summary:"Wharton 教授 Ethan Mollick 认为前沿开放权重模型的免费供给将难以无限期持续，甚至短期内就可能中止。",url:"https://x.com/emollick/status/2074497401578996154",isNew:true},
+        {title:"美国首批自主地面车辆在乌克兰参战",source:"TechCrunch",summary:"Forterra 已部署超100辆 Lancer 自主地面车辆至乌克兰战场，执行1100+次任务、运送77.7万磅物资、完成52次伤员撤离，融资超5亿美元。",url:"https://techcrunch.com/2026/07/07/the-first-american-autonomous-ground-vehicles-are-fighting-in-ukraine",isNew:true}
+      ]
+    },
+    { // 论文研究
+      items: [
+        {title:"用可解释性理解标注者安全策略",source:"Apple ML Research",summary:"Annotator Policy Models（APMs）从标注行为学习标注者安全策略，准确率超80%，可揭示不同标注者对安全指令的差异解释和人口群体安全优先级差异。",url:"https://machinelearning.apple.com/research/annotator-safety-policy-interpretability",isNew:false},
+        {title:"Apple 提出专用小型 seq2seq 模型用于 ASR 纠错",source:"Apple ML Research",summary:"Apple 用紧凑 seq2seq 模型做 ASR 纠错，参数比 LLM 少15倍，LibriSpeech test-clean WER 达1.5%，优于LLM，可泛化至多种ASR架构。",url:"https://machinelearning.apple.com/research/asr-error-correction",isNew:false},
+        {title:"TopoPrimer：预测模型中缺失的拓扑上下文",source:"Apple ML Research",summary:"TopoPrimer 框架将序列群体全局拓扑结构作为显式输入加入预测模型，ECL 上 MSE 最高提升7.3%，冷启动 MAE 降低27%。",url:"https://machinelearning.apple.com/research/topoprimer-topological-context",isNew:false},
+        {title:"苹果研究：单个神经元即可绕过大型语言模型的安全对齐",source:"Apple ML Research",summary:"苹果发现仅需抑制单个拒绝神经元即可绕过安全对齐，7个模型（1.7B-70B）均验证，无需训练或提示工程，表明安全对齐由个别神经元因果控制。",url:"https://machinelearning.apple.com/research/single-neuron-safety-alignment",isNew:true},
+        {title:"Weblica：面向视觉网页智能体的可扩展可复现训练环境",source:"Apple ML Research",summary:"Weblica 框架通过 HTTP 级缓存和 LLM 合成环境实现可复现的强化学习训练，Weblica-8B 在网页导航基准上超越同等开源模型。",url:"https://machinelearning.apple.com/research/weblica-visual-web-agents",isNew:true},
+        {title:"DynaMiCS：带性能约束的大语言模型动态混合微调",source:"Apple ML Research",summary:"DynaMiCS 动态混合优化器将多领域微调建模为带约束优化问题，比固定混合基线实现更强目标领域提升和约束满足，计算成本更低。",url:"https://machinelearning.apple.com/research/dynamics-fine-tuning-llms",isNew:true}
+      ]
+    },
+    { // 技巧与观点
+      items: [
+        {title:"AI颠覆初级程序员就业市场：年轻开发者就业锐减19%",source:"seldo.com",summary:"斯坦福数据显示美国22-25岁开发者就业较2022年下降19%，入门岗减少28%，CS毕业生失业率6.1%超文科，智能体编程是核心推手。",url:"https://seldo.com/posts/ai-has-torched-the-market-for-junior-programmers",isNew:false},
+        {title:"Google 更新隐私设置，默认用媒体数据训练 AI",source:"TechCrunch",summary:"Google 低调更新搜索服务隐私设置，默认将用户上传的图片、文件、音频等媒体数据保存并用于训练 AI 模型，用户可手动退出。",url:"https://techcrunch.com/2026/07/06/if-you-use-google-youre-training-its-ai-heres-how-to-opt-out",isNew:false},
+        {title:"免费开源API中转站监测网站 tokhub.me 上线",source:"tokhub.me",summary:"开源 API 中转站评测网站，通过真实充值调用 API 监控模型性能，支持一键 Docker 部署，可作为公司内部 Token 和网关管理系统。",url:"https://x.com/vista8/status/2074130700421456089",isNew:false},
+        {title:"AT&T 1956年专利法令：公共天才的私有化",source:"WYSR",summary:"AT&T 签署专利法令免费授权7820项专利，催生约35亿美元衍生专利价值，推动肖克利半导体、仙童及英特尔诞生，奠定硅谷起飞基础。",url:"https://www.wysr.xyz/p/the-private-capture-of-public-genius",isNew:false},
+        {title:"分享8个Claude Fable 5下线前必跑的超实用Prompt",source:"卡尔的AI沃茨",summary:"8个经实战验证的提示词：自动跑25次实验降50%构建时间、工作模式转Skills、行动规范约束subagent等，可迁移至API计费后使用。",url:"https://mp.weixin.qq.com/s/ZkMsdeTK6wmgkaER0iPT8w",isNew:false},
+        {title:"Claude Code 团队详解四种智能体循环类型",source:"Claude Devs",summary:"Claude Code 团队划分四种设计循环：回合循环、目标循环、时间循环和主动循环，建议从最简单方案开始，选择性使用复杂循环。",url:"https://x.com/ClaudeDevs/status/2074208949205881033",isNew:false},
+        {title:"Claude Fable实地指南：发现你的未知",source:"Claude Blog",summary:"Claude Fable 是第一款要求用户主动澄清未知才能获得高质量工作的模型，协作是从已知到未知的迭代发现过程，通过四象限方法挖掘深藏问题。",url:"https://claude.com/blog/a-field-guide-to-claude-fable-finding-your-unknowns",isNew:false},
+        {title:"Google MaxText 弹性训练：训练中途终止 TPU，数秒内恢复",source:"Google Developers",summary:"Google 通过 Pathways 实现弹性训练，硬件故障转化为可捕获异常，训练中途终止 TPU 后自动替换节点，总停机时间低于2分钟。",url:"https://developers.googleblog.com/we-terminated-a-tpu-mid-training-and-it-recovered-in-seconds-introduction-to-elastic-training-with-maxtext",isNew:false},
+        {title:"Elvis Saravia 通过 HITL 和 DialAgent 提升 agentic loops 可靠性",source:"DAIR.AI",summary:"使用 human-in-the-loop（HITL）提升 agentic loops 可靠性，通过 DialAgent MCP 服务器为 agent 提供专属号码，支持语音/SMS/iMessage 升级决策。",url:"https://x.com/omarsar0/status/2074506169352180108",isNew:true},
+        {title:"在 Claude Code 中选择 Claude 模型与努力级别",source:"Claude Blog",summary:"模型决定能力范围，努力级别不只思考时间，还控制读取文件数、验证步骤及多步任务推进深度。跳读或不运行测试出错应提高努力级别。",url:"https://claude.com/blog/claude-model-and-effort-level-in-claude-code",isNew:true},
+        {title:"在网络不稳定的地区，小型AI模型正逐渐普及",source:"IEEE Spectrum",summary:"小AI模型参数通常至多数十亿，可在手机或 Raspberry Pi 上运行、功耗仅数瓦，在无宽带和缺电地区提供生命救助服务，全球最穷国家仅0.7%用过ChatGPT。",url:"https://spectrum.ieee.org/small-language-models-ai-pharmaceuticals",isNew:true}
+      ]
+    }
+  ];
+
+  // ── Helpers ──
+  function fmtBJ(d) { return d.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'}); }
+  function fmtFull(d) {
+    return d.toLocaleString('zh-CN',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Shanghai',hour12:false});
+  }
+
+  // ── Build ──
+  var globalIdx = 0;
+  var sectionCounts = [];
+  var newCount = 0;
+  var genDate = new Date('2026-07-07T23:50:00+08:00');
+
+  document.getElementById('heroDate').textContent = fmtFull(genDate) + ' · 北京时间（已更新）';
+
+  sections.forEach(function(sec) {
+    var cnt = 0;
+    sec.cards = sec.items.map(function(item) {
+      globalIdx++;
+      cnt++;
+      if (item.isNew) newCount++;
+      return {num:globalIdx, title:item.title, source:item.source, summary:item.summary, url:item.url, isNew:item.isNew, color:sec.color};
+    });
+    sectionCounts.push(cnt);
+    sec.color = SECTION_COLORS[sections.indexOf(sec)];
+  });
+
+  var total = globalIdx;
+
+  document.getElementById('heroUpdate').textContent = '🔄 含 7/7 白天新增精选内容 ' + newCount + ' 条';
+
+  // Hero stats
+  var statsHTML = '<div class="stat-item"><div class="stat-num">' + total + '</div><div class="stat-label">总条目</div></div>';
+  SECTION_LABELS.forEach(function(l,i) {
+    statsHTML += '<div class="stat-item"><div class="stat-num">' + sectionCounts[i] + '</div><div class="stat-label">' + l + '</div></div>';
+  });
+  document.getElementById('heroStats').innerHTML = statsHTML;
+
+  var tagsHTML = SECTION_LABELS.map(function(l,i) {
+    return '<span class="hero-section-tag">' + l + '（' + sectionCounts[i] + '）</span>';
+  }).join('');
+  document.getElementById('heroTags').innerHTML = tagsHTML;
+
+  // Nav
+  var navHTML = SECTION_LABELS.map(function(l,i) {
+    return '<a href="#sec-' + SECTION_SLUGS[i] + '">' + SECTION_ICONS[i] + ' ' + l + '<span class="nav-count">' + sectionCounts[i] + '</span></a>';
+  }).join('');
+  document.getElementById('navLinks').innerHTML = navHTML;
+
+  // Sections
+  var mainHTML = '';
+  sections.forEach(function(sec, si) {
+    mainHTML += '<section class="section" id="sec-' + SECTION_SLUGS[si] + '">';
+    mainHTML += '<div class="section-header">';
+    mainHTML += '<div class="section-icon" style="background:' + SECTION_COLORS[si] + '1a;color:' + SECTION_COLORS[si] + '">' + SECTION_ICONS[si] + '</div>';
+    mainHTML += '<h2 class="section-title">' + SECTION_LABELS[si] + '</h2>';
+    mainHTML += '<span class="section-count">' + sec.cards.length + ' 条</span>';
+    mainHTML += '</div>';
+
+    if (sec.cards.length === 0) {
+      mainHTML += '<div class="empty-section"><div class="empty-icon">📭</div><div class="empty-text">今日暂无内容</div></div>';
+    } else {
+      mainHTML += '<div class="cards">';
+      sec.cards.forEach(function(c) {
+        var newClass = c.isNew ? ' card-new' : '';
+        mainHTML += '<article class="card' + newClass + '">';
+        mainHTML += '<span class="card-num">' + c.num + '</span>';
+        mainHTML += '<div class="card-header">';
+        mainHTML += '<h3 class="card-title">' + esc(c.title) + '</h3>';
+        mainHTML += '<span class="card-source" style="background:' + SECTION_COLORS[si] + '12;color:' + SECTION_COLORS[si] + '">' + esc(c.source) + '</span>';
+        mainHTML += '</div>';
+        mainHTML += '<p class="card-summary">' + esc(c.summary) + '</p>';
+        mainHTML += '<div class="card-footer">';
+        mainHTML += '<a class="card-link" href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer">';
+        mainHTML += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+        mainHTML += '阅读原文</a>';
+        mainHTML += '</div>';
+        mainHTML += '</article>';
+      });
+      mainHTML += '</div>';
+    }
+    mainHTML += '</section>';
+  });
+  document.getElementById('mainContent').innerHTML = mainHTML;
+
+  // Footer
+  document.getElementById('footerText').innerHTML =
+    '共收录 <strong>' + total + '</strong> 条 AI 动态，覆盖 ' + SECTION_LABELS.join('、') + ' 五大版块。<br>' +
+    '数据来源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">AI HOT (aihot.virxact.com)</a> · ' +
+    '更新于 ' + fmtFull(genDate) + '（北京时间）';
+
+  // Nav scroll highlight
+  var navAnchors = document.querySelectorAll('.nav a');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        navAnchors.forEach(function(a) { a.classList.remove('active'); });
+        var target = document.querySelector('.nav a[href="#' + e.target.id + '"]');
+        if (target) target.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-80px 0px -50% 0px' });
+  document.querySelectorAll('.section').forEach(function(s) { observer.observe(s); });
+
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+})();
+</script>
+</body>
+</html>
