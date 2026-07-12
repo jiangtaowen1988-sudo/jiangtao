@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宏观共振交易系统 | MPI Macro Resonance Trading System</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+<style>
+:root {
+  --bg: #f5f7fa;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
+  --text: #1a202c;
+  --text-secondary: #64748b;
+  --red: #ef4444;
+  --red-bg: #fef2f2;
+  --green: #22c55e;
+  --green-bg: #f0fdf4;
+  --blue: #3b82f6;
+  --blue-bg: #eff6ff;
+  --orange: #f59e0b;
+  --orange-bg: #fffbeb;
+  --purple: #8b5cf6;
+  --purple-bg: #f5f3ff;
+  --gray: #94a3b8;
+  --teal: #14b8a6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-logo { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+.header-sub { font-size: 12px; opacity: 0.7; }
+.header-right { display: flex; align-items: center; gap: 20px; }
+.mpi-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
+}
+.mpi-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+/* Nav */
+.nav-tabs {
+  display: flex;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  overflow-x: auto;
+  position: sticky;
+  top: 57px;
+  z-index: 99;
+}
+.nav-tab {
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.nav-tab:hover { color: var(--blue); }
+.nav-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+/* Layout */
+.container { max-width: 1600px; margin: 0 auto; padding: 20px 24px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border: 1px solid var(--border);
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title .badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+/* Grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+@media (max-width: 1200px) {
+  .grid-4, .grid-5 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+/* Index Card */
+.idx-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.idx-card .name { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+.idx-card .price { font-size: 24px; font-weight: 700; }
+.idx-card .chg { font-size: 14px; font-weight: 600; margin-top: 2px; }
+.idx-card .meta { font-size: 11px; color: var(--gray); margin-top: 8px; display: flex; gap: 12px; }
+.up { color: var(--red); }
+.down { color: var(--green); }
+/* MPI Gauge */
+.mpi-container { display: flex; align-items: center; gap: 40px; }
+.mpi-gauge {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  flex-shrink: 0;
+}
+.mpi-score {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.mpi-score .val { font-size: 42px; font-weight: 800; }
+.mpi-score .label { font-size: 12px; color: var(--text-secondary); }
+.mpi-factors { flex: 1; }
+.mpi-factor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.mpi-factor:last-child { border-bottom: none; }
+.mpi-factor .fname { font-size: 13px; font-weight: 500; }
+.mpi-factor .fbar {
+  width: 120px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+.mpi-factor .fbar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.mpi-factor .fval { font-size: 12px; font-weight: 600; width: 40px; text-align: right; }
+/* Seesaw */
+.seesaw-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+}
+.seesaw {
+  width: 100%;
+  max-width: 600px;
+  height: 120px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.seesaw-bar {
+  width: 80%;
+  height: 8px;
+  background: linear-gradient(90deg, var(--green) 0%, var(--gray) 50%, var(--red) 100%);
+  border-radius: 4px;
+  transform: rotate(-5deg);
+  transition: transform 0.5s ease;
+  position: relative;
+}
+.seesaw-bar::before {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 30px solid var(--border);
+}
+.seesaw-side {
+  position: absolute;
+  top: -60px;
+  text-align: center;
+  width: 200px;
+}
+.seesaw-side.left { left: 5%; }
+.seesaw-side.right { right: 5%; }
+.seesaw-side .title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.seesaw-side .items { font-size: 11px; color: var(--text-secondary); }
+.seesaw-center {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+.seesaw-center .label { font-size: 12px; color: var(--text-secondary); }
+.seesaw-center .value { font-size: 18px; font-weight: 700; }
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); color: var(--text-secondary); font-weight: 600; font-size: 12px; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+tr:hover { background: #f8fafc; }
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.tag-red { background: var(--red-bg); color: var(--red); }
+.tag-green { background: var(--green-bg); color: var(--green); }
+.tag-blue { background: var(--blue-bg); color: var(--blue); }
+.tag-orange { background: var(--orange-bg); color: var(--orange); }
+.tag-gray { background: #f1f5f9; color: var(--gray); }
+/* Chart container */
+.chart-box { position: relative; height: 320px; }
+.chart-box-sm { position: relative; height: 200px; }
+/* Signal Panel */
+.signal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 900px) { .signal-grid { grid-template-columns: 1fr 1fr; } }
+.signal-box {
+  padding: 16px;
+  border-radius: 10px;
+  text-align: center;
+  border: 2px solid;
+}
+.signal-box .icon { font-size: 28px; margin-bottom: 8px; }
+.signal-box .title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.signal-box .desc { font-size: 11px; color: var(--text-secondary); }
+.signal-box .status { font-size: 12px; font-weight: 600; margin-top: 8px; padding: 4px 12px; border-radius: 12px; display: inline-block; }
+.signal-bull { border-color: var(--red); background: var(--red-bg); }
+.signal-bear { border-color: var(--green); background: var(--green-bg); }
+.signal-neutral { border-color: var(--gray); background: #f8fafc; }
+/* Stock Selector */
+.stock-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.stock-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.stock-btn:hover { border-color: var(--blue); }
+.stock-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+/* Framework Steps */
+.framework-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 20px 0;
+  overflow-x: auto;
+}
+.flow-step {
+  flex: 1;
+  min-width: 180px;
+  padding: 16px;
+  position: relative;
+  border-right: 1px solid var(--border);
+}
+.flow-step:last-child { border-right: none; }
+.flow-step .num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.flow-step .title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.flow-step .sub { font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; }
+.flow-step .content { font-size: 12px; }
+.flow-step .arrow {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  color: var(--gray);
+}
+/* News */
+.news-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.news-item:last-child { border-bottom: none; }
+.news-item .title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.news-item .meta { font-size: 11px; color: var(--gray); margin-bottom: 4px; }
+.news-item .summary { font-size: 12px; color: var(--text-secondary); }
+/* Position Advice */
+.pos-advice {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+.pos-advice .icon { font-size: 32px; }
+.pos-advice .text { flex: 1; }
+.pos-advice .title { font-size: 15px; font-weight: 700; }
+.pos-advice .desc { font-size: 12px; color: var(--text-secondary); }
+/* Loader */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--gray);
+}
+/* Tech Indicators */
+.tech-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 16px; }
+@media (max-width: 900px) { .tech-grid { grid-template-columns: repeat(3, 1fr); } }
+.tech-cell {
+  padding: 10px;
+  border-radius: 8px;
+  background: #f8fafc;
+  text-align: center;
+}
+.tech-cell .label { font-size: 10px; color: var(--text-secondary); }
+.tech-cell .value { font-size: 16px; font-weight: 700; margin-top: 2px; }
+.tech-cell .signal { font-size: 10px; margin-top: 2px; font-weight: 600; }
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: var(--gray);
+  font-size: 12px;
+}
+</style>
+
+<!-- Data JSON embedded -->
+<script id="data-json" type="application/json">{"sh_index": {"name": "上证指数", "data": [{"date": "20260414", "open": 4006.72998, "high": 4026.629883, "low": 3992.409912, "close": 4026.629883, "volume": 570259008.0, "amount": 998435127296.0}, {"date": "20260415", "open": 4039.469971, "high": 4050.620117, "low": 4020.899902, "close": 4027.209961, "volume": 569458560.0, "amount": 1028851892224.0}, {"date": "20260416", "open": 4030.139893, "high": 4057.830078, "low": 4028.909912, "close": 4055.550049, "volume": 545876992.0, "amount": 976565501952.0}, {"date": "20260417", "open": 4043.379883, "high": 4058.600098, "low": 4038.429932, "close": 4051.429932, "volume": 548791424.0, "amount": 1013520662528.0}, {"date": "20260420", "open": 4053.370117, "high": 4083.189941, "low": 4051.689941, "close": 4082.129883, "volume": 589841408.0, "amount": 1084578004992.0}, {"date": "20260421", "open": 4075.850098, "high": 4086.639893, "low": 4062.129883, "close": 4085.080078, "volume": 576689472.0, "amount": 1033349038080.0}, {"date": "20260422", "open": 4074.810059, "high": 4106.839844, "low": 4074.679932, "close": 4106.259766, "volume": 582466368.0, "amount": 1093625905152.0}, {"date": "20260423", "open": 4110.790039, "high": 4114.839844, "low": 4070.459961, "close": 4093.25, "volume": 671166080.0, "amount": 1234396250112.0}, {"date": "20260424", "open": 4081.030029, "high": 4092.610107, "low": 4061.149902, "close": 4079.899902, "volume": 605031808.0, "amount": 1143000137728.0}, {"date": "20260427", "open": 4074.810059, "high": 4092.830078, "low": 4071.080078, "close": 4086.340088, "volume": 589950848.0, "amount": 1136051879936.0}, {"date": "20260428", "open": 4076.139893, "high": 4090.199951, "low": 4062.870117, "close": 4078.639893, "volume": 600507520.0, "amount": 1113955500032.0}, {"date": "20260429", "open": 4061.820068, "high": 4112.149902, "low": 4061.820068, "close": 4107.509766, "volume": 614221440.0, "amount": 1126615351296.0}, {"date": "20260430", "open": 4107.299805, "high": 4118.759766, "low": 4100.970215, "close": 4112.160156, "volume": 656912704.0, "amount": 1276194717696.0}, {"date": "20260506", "open": 4135.450195, "high": 4166.149902, "low": 4129.910156, "close": 4160.169922, "volume": 701177472.0, "amount": 1465903218688.0}, {"date": "20260507", "open": 4168.450195, "high": 4180.209961, "low": 4163.140137, "close": 4180.089844, "volume": 685574272.0, "amount": 1359099461632.0}, {"date": "20260508", "open": 4163.850098, "high": 4183.060059, "low": 4154.25, "close": 4179.950195, "volume": 697019072.0, "amount": 1331673038848.0}, {"date": "20260511", "open": 4201.350098, "high": 4229.580078, "low": 4186.080078, "close": 4225.02002, "volume": 762736256.0, "amount": 1584366747648.0}, {"date": "20260512", "open": 4229.279785, "high": 4230.180176, "low": 4199.339844, "close": 4214.490234, "volume": 718984000.0, "amount": 1465272631296.0}, {"date": "20260513", "open": 4192.310059, "high": 4245.069824, "low": 4192.310059, "close": 4242.569824, "volume": 705018752.0, "amount": 1447464009728.0}, {"date": "20260514", "open": 4256.160156, "high": 4258.859863, "low": 4177.919922, "close": 4177.919922, "volume": 764235008.0, "amount": 1498116784128.0}, {"date": "20260515", "open": 4174.180176, "high": 4191.810059, "low": 4114.089844, "close": 4135.390137, "volume": 733162368.0, "amount": 1519240085504.0}, {"date": "20260518", "open": 4120.140137, "high": 4145.660156, "low": 4108.600098, "close": 4131.529785, "volume": 627233152.0, "amount": 1315084173312.0}, {"date": "20260519", "open": 4122.959961, "high": 4170.290039, "low": 4107.990234, "close": 4169.540039, "volume": 617611072.0, "amount": 1306522419200.0}, {"date": "20260520", "open": 4152.700195, "high": 4169.850098, "low": 4139.970215, "close": 4162.180176, "volume": 624152064.0, "amount": 1358926970880.0}, {"date": "20260521", "open": 4174.379883, "high": 4199.529785, "low": 4074.219971, "close": 4077.280029, "volume": 727218688.0, "amount": 1595726757888.0}, {"date": "20260522", "open": 4096.169922, "high": 4120.089844, "low": 4067.75, "close": 4112.899902, "volume": 589459648.0, "amount": 1285847515136.0}, {"date": "20260525", "open": 4126.339844, "high": 4153.879883, "low": 4119.799805, "close": 4152.569824, "volume": 615930880.0, "amount": 1445655347200.0}, {"date": "20260526", "open": 4137.319824, "high": 4150.290039, "low": 4104.459961, "close": 4145.370117, "volume": 654777728.0, "amount": 1461685321728.0}, {"date": "20260527", "open": 4138.810059, "high": 4153.560059, "low": 4077.620117, "close": 4093.72998, "volume": 660467392.0, "amount": 1473449033728.0}, {"date": "20260528", "open": 4080.300049, "high": 4110.779785, "low": 4055.830078, "close": 4098.640137, "volume": 621179968.0, "amount": 1361325719552.0}, {"date": "20260529", "open": 4110.52002, "high": 4112.959961, "low": 4055.889893, "close": 4068.570068, "volume": 731597696.0, "amount": 1532067315712.0}, {"date": "20260601", "open": 4067.159912, "high": 4093.040039, "low": 4045.689941, "close": 4057.73999, "volume": 676025792.0, "amount": 1319801978880.0}, {"date": "20260602", "open": 4061.459961, "high": 4089.570068, "low": 4032.580078, "close": 4075.100098, "volume": 642244672.0, "amount": 1280966131712.0}, {"date": "20260603", "open": 4068.340088, "high": 4107.049805, "low": 4059.909912, "close": 4083.969971, "volume": 668452608.0, "amount": 1429755789312.0}, {"date": "20260604", "open": 4053.669922, "high": 4080.719971, "low": 4043.429932, "close": 4057.780029, "volume": 621194752.0, "amount": 1274652131328.0}, {"date": "20260605", "open": 4044.830078, "high": 4078.929932, "low": 4015.060059, "close": 4027.73999, "volume": 662918592.0, "amount": 1363887915008.0}, {"date": "20260608", "open": 3938.709961, "high": 4007.48999, "low": 3927.850098, "close": 3959.340088, "volume": 659293568.0, "amount": 1267277234176.0}, {"date": "20260609", "open": 3977.540039, "high": 4010.870117, "low": 3955.909912, "close": 4010.030029, "volume": 576570112.0, "amount": 1173088894976.0}, {"date": "20260610", "open": 3985.120117, "high": 4006.310059, "low": 3963.439941, "close": 3993.22998, "volume": 598694720.0, "amount": 1227070111744.0}, {"date": "20260611", "open": 3979.709961, "high": 3997.47998, "low": 3958.439941, "close": 3987.01001, "volume": 568545216.0, "amount": 1185554628608.0}, {"date": "20260612", "open": 4017.860107, "high": 4060.27002, "low": 4008.179932, "close": 4031.51001, "volume": 743131072.0, "amount": 1537401552896.0}, {"date": "20260615", "open": 4053.580078, "high": 4097.169922, "low": 4051.070068, "close": 4096.470215, "volume": 678907840.0, "amount": 1403586215936.0}, {"date": "20260616", "open": 4094.209961, "high": 4103.930176, "low": 4077.870117, "close": 4091.889893, "volume": 615668288.0, "amount": 1369613008896.0}, {"date": "20260617", "open": 4074.290039, "high": 4109.959961, "low": 4073.72998, "close": 4108.080078, "volume": 608077440.0, "amount": 1403145945088.0}, {"date": "20260618", "open": 4094.22998, "high": 4117.450195, "low": 4080.290039, "close": 4090.47998, "volume": 658116096.0, "amount": 1560474025984.0}, {"date": "20260622", "open": 4093.949951, "high": 4164.419922, "low": 4070.169922, "close": 4163.100098, "volume": 743699328.0, "amount": 1704000356352.0}, {"date": "20260623", "open": 4153.589844, "high": 4175.350098, "low": 4085.590088, "close": 4106.25, "volume": 709003904.0, "amount": 1594542391296.0}, {"date": "20260624", "open": 4090.100098, "high": 4117.279785, "low": 4075.48999, "close": 4110.810059, "volume": 644527488.0, "amount": 1514193289216.0}, {"date": "20260625", "open": 4103.47998, "high": 4133.100098, "low": 4093.01001, "close": 4120.279785, "volume": 670459904.0, "amount": 1618996494336.0}, {"date": "20260626", "open": 4098.689941, "high": 4099.779785, "low": 4007.860107, "close": 4027.26001, "volume": 660108672.0, "amount": 1621195751424.0}, {"date": "20260629", "open": 4026.689941, "high": 4075.330078, "low": 3992.550049, "close": 4073.899902, "volume": 659199936.0, "amount": 1666220425216.0}, {"date": "20260630", "open": 4058.169922, "high": 4097.419922, "low": 4052.169922, "close": 4094.399902, "volume": 598412224.0, "amount": 1530326024192.0}, {"date": "20260701", "open": 4090.76001, "high": 4143.310059, "low": 4087.540039, "close": 4112.450195, "volume": 672331776.0, "amount": 1698487599104.0}, {"date": "20260702", "open": 4054.090088, "high": 4093.679932, "low": 4019.209961, "close": 4028.899902, "volume": 656233600.0, "amount": 1577183739904.0}, {"date": "20260703", "open": 4031.340088, "high": 4073.879883, "low": 4027.26001, "close": 4043.639893, "volume": 602009728.0, "amount": 1465563086848.0}, {"date": "20260706", "open": 4059.189941, "high": 4060.070068, "low": 4005.409912, "close": 4041.23999, "volume": 590364928.0, "amount": 1432112857088.0}, {"date": "20260707", "open": 4019.48999, "high": 4028.51001, "low": 3971.709961, "close": 3990.23999, "volume": 514453088.0, "amount": 1196371083264.0}, {"date": "20260708", "open": 3996.810059, "high": 4016.030029, "low": 3967.909912, "close": 3970.879883, "volume": 496229376.0, "amount": 1192355823616.0}, {"date": "20260709", "open": 3977.550049, "high": 4040.540039, "low": 3938.879883, "close": 4036.590088, "volume": 553064000.0, "amount": 1364176535552.0}, {"date": "20260710", "open": 4031.540039, "high": 4074.830078, "low": 3995.810059, "close": 3996.159912, "volume": 627450048.0, "amount": 1563108704256.0}]}, "sz_index": {"name": "深证成指", "data": [{"date": "20260414", "open": 14514.69043, "high": 14640.769531, "low": 14463.929688, "close": 14639.950195, "volume": 683376960.0, "amount": 1385288564736.0}, {"date": "20260415", "open": 14736.009766, "high": 14738.530273, "low": 14440.209961, "close": 14498.450195, "volume": 697369600.0, "amount": 1386392977408.0}, {"date": "20260416", "open": 14546.349609, "high": 14807.160156, "low": 14522.860352, "close": 14796.330078, "volume": 686456000.0, "amount": 1365124841472.0}, {"date": "20260417", "open": 14806.280273, "high": 14916.389648, "low": 14787.870117, "close": 14885.419922, "volume": 695914496.0, "amount": 1412063035392.0}, {"date": "20260420", "open": 14870.900391, "high": 15006.919922, "low": 14845.969727, "close": 14966.75, "volume": 723332096.0, "amount": 1494192095232.0}, {"date": "20260421", "open": 14920.379883, "high": 15017.75, "low": 14774.080078, "close": 14982.139648, "volume": 701150016.0, "amount": 1375194578944.0}, {"date": "20260422", "open": 14897.959961, "high": 15182.820312, "low": 14897.959961, "close": 15177.290039, "volume": 698955584.0, "amount": 1466159202304.0}, {"date": "20260423", "open": 15234.219727, "high": 15248.429688, "low": 14934.679688, "close": 15043.450195, "volume": 761022848.0, "amount": 1570096152576.0}, {"date": "20260424", "open": 14951.740234, "high": 15033.669922, "low": 14795.219727, "close": 14940.299805, "volume": 709729408.0, "amount": 1498859044864.0}, {"date": "20260427", "open": 14960.019531, "high": 15054.459961, "low": 14919.219727, "close": 14995.75, "volume": 709929984.0, "amount": 1453399474176.0}, {"date": "20260428", "open": 14925.219727, "high": 14943.360352, "low": 14772.459961, "close": 14830.459961, "volume": 723727552.0, "amount": 1422352318464.0}, {"date": "20260429", "open": 14751.419922, "high": 15139.709961, "low": 14751.419922, "close": 15120.919922, "volume": 736380416.0, "amount": 1463521771520.0}, {"date": "20260430", "open": 15157.070312, "high": 15186.120117, "low": 15044.860352, "close": 15107.549805, "volume": 737703744.0, "amount": 1464716754944.0}, {"date": "20260506", "open": 15323.19043, "high": 15534.669922, "low": 15254.990234, "close": 15459.620117, "volume": 826248704.0, "amount": 1760931086336.0}, {"date": "20260507", "open": 15541.299805, "high": 15652.580078, "low": 15439.480469, "close": 15641.889648, "volume": 844489856.0, "amount": 1784856051712.0}, {"date": "20260508", "open": 15520.379883, "high": 15639.389648, "low": 15466.839844, "close": 15563.799805, "volume": 826218496.0, "amount": 1716868874240.0}, {"date": "20260511", "open": 15697.44043, "high": 15921.650391, "low": 15622.330078, "close": 15899.299805, "volume": 911634880.0, "amount": 1954494676992.0}, {"date": "20260512", "open": 15952.790039, "high": 15952.790039, "low": 15711.269531, "close": 15824.919922, "volume": 847817152.0, "amount": 1777383768064.0}, {"date": "20260513", "open": 15713.540039, "high": 16100.459961, "low": 15713.540039, "close": 16089.75, "volume": 827341440.0, "amount": 1792550109184.0}, {"date": "20260514", "open": 16202.219727, "high": 16207.75, "low": 15745.740234, "close": 15745.740234, "volume": 873525504.0, "amount": 1864136916992.0}, {"date": "20260515", "open": 15753.19043, "high": 15855.549805, "low": 15447.400391, "close": 15561.370117, "volume": 849695616.0, "amount": 1825236189184.0}, {"date": "20260518", "open": 15465.299805, "high": 15658.110352, "low": 15419.040039, "close": 15530.230469, "volume": 738305600.0, "amount": 1578895933440.0}, {"date": "20260519", "open": 15469.360352, "high": 15585.040039, "low": 15221.349609, "close": 15569.910156, "volume": 731216512.0, "amount": 1580035866624.0}, {"date": "20260520", "open": 15487.429688, "high": 15622.209961, "low": 15426.379883, "close": 15569.980469, "volume": 726217984.0, "amount": 1594787495936.0}, {"date": "20260521", "open": 15707.959961, "high": 15894.299805, "low": 15232.599609, "close": 15247.269531, "volume": 878984192.0, "amount": 1885877960704.0}, {"date": "20260522", "open": 15382.290039, "high": 15624.969727, "low": 15295.570312, "close": 15597.299805, "volume": 763067264.0, "amount": 1617472520192.0}, {"date": "20260525", "open": 15716.389648, "high": 15857.080078, "low": 15547.160156, "close": 15856.610352, "volume": 781225856.0, "amount": 1760074924032.0}, {"date": "20260526", "open": 15786.820312, "high": 15894.549805, "low": 15662.160156, "close": 15876.160156, "volume": 823273536.0, "amount": 1782006677504.0}, {"date": "20260527", "open": 15868.900391, "high": 16047.410156, "low": 15656.650391, "close": 15736.469727, "volume": 815871168.0, "amount": 1765113200640.0}, {"date": "20260528", "open": 15691.160156, "high": 15889.830078, "low": 15504.790039, "close": 15861.889648, "volume": 747849408.0, "amount": 1606824886272.0}, {"date": "20260529", "open": 15957.120117, "high": 15981.929688, "low": 15492.839844, "close": 15575.129883, "volume": 848879744.0, "amount": 1786964738048.0}, {"date": "20260601", "open": 15601.030273, "high": 15717.450195, "low": 15316.019531, "close": 15340.360352, "volume": 760393024.0, "amount": 1557685993472.0}, {"date": "20260602", "open": 15410.700195, "high": 15664.389648, "low": 15203.799805, "close": 15591.129883, "volume": 737350336.0, "amount": 1512025882624.0}, {"date": "20260603", "open": 15646.69043, "high": 15962.360352, "low": 15542.660156, "close": 15704.709961, "volume": 792737856.0, "amount": 1700522754048.0}, {"date": "20260604", "open": 15540.05957, "high": 15745.19043, "low": 15517.94043, "close": 15661.570312, "volume": 718939392.0, "amount": 1483016634368.0}, {"date": "20260605", "open": 15595.700195, "high": 15710.139648, "low": 15243.509766, "close": 15314.700195, "volume": 818251200.0, "amount": 1705303998464.0}, {"date": "20260608", "open": 14835.370117, "high": 15137.75, "low": 14681.639648, "close": 14821.19043, "volume": 788640832.0, "amount": 1525460893696.0}, {"date": "20260609", "open": 14992.549805, "high": 15274.719727, "low": 14846.549805, "close": 15268.709961, "volume": 718050688.0, "amount": 1467207122944.0}, {"date": "20260610", "open": 15062.509766, "high": 15149.370117, "low": 14817.110352, "close": 14954.099609, "volume": 710462336.0, "amount": 1392172859392.0}, {"date": "20260611", "open": 14889.570312, "high": 15062.75, "low": 14706.089844, "close": 14851.980469, "volume": 669817664.0, "amount": 1366466887680.0}, {"date": "20260612", "open": 15149.519531, "high": 15171.219727, "low": 14943.429688, "close": 14963.410156, "volume": 792336448.0, "amount": 1677548191744.0}, {"date": "20260615", "open": 15153.179688, "high": 15531.110352, "low": 15055.950195, "close": 15531.110352, "volume": 757054656.0, "amount": 1627612512256.0}, {"date": "20260616", "open": 15584.370117, "high": 15761.0, "low": 15537.5, "close": 15675.25, "volume": 754828800.0, "amount": 1695082872832.0}, {"date": "20260617", "open": 15569.919922, "high": 15885.490234, "low": 15569.919922, "close": 15880.950195, "volume": 745916224.0, "amount": 1688618270720.0}, {"date": "20260618", "open": 15826.790039, "high": 16104.769531, "low": 15825.320312, "close": 16030.700195, "volume": 764976896.0, "amount": 1749632942080.0}, {"date": "20260622", "open": 16095.629883, "high": 16374.019531, "low": 15914.049805, "close": 16372.5, "volume": 876768640.0, "amount": 2033198432256.0}, {"date": "20260623", "open": 16324.240234, "high": 16355.950195, "low": 15756.410156, "close": 15854.200195, "volume": 808549312.0, "amount": 1846221602816.0}, {"date": "20260624", "open": 15782.400391, "high": 16068.410156, "low": 15730.160156, "close": 16051.320312, "volume": 790758080.0, "amount": 1770134962176.0}, {"date": "20260625", "open": 16099.759766, "high": 16359.620117, "low": 16058.849609, "close": 16344.080078, "volume": 830961792.0, "amount": 1975291478016.0}, {"date": "20260626", "open": 16211.410156, "high": 16215.450195, "low": 15728.839844, "close": 15782.219727, "volume": 837034624.0, "amount": 1931214716928.0}, {"date": "20260629", "open": 15781.790039, "high": 15938.230469, "low": 15487.919922, "close": 15812.870117, "volume": 808457856.0, "amount": 1851533426688.0}, {"date": "20260630", "open": 15811.669922, "high": 16232.230469, "low": 15809.650391, "close": 16205.55957, "volume": 745149824.0, "amount": 1743431663616.0}, {"date": "20260701", "open": 16226.969727, "high": 16332.480469, "low": 15988.419922, "close": 16119.169922, "volume": 873614848.0, "amount": 1961516072960.0}, {"date": "20260702", "open": 15729.919922, "high": 15886.700195, "low": 15453.519531, "close": 15498.80957, "volume": 857269760.0, "amount": 1873367662592.0}, {"date": "20260703", "open": 15480.120117, "high": 15823.049805, "low": 15432.889648, "close": 15597.509766, "volume": 785895040.0, "amount": 1716890370048.0}, {"date": "20260706", "open": 15677.929688, "high": 15749.360352, "low": 15288.490234, "close": 15416.799805, "volume": 768142336.0, "amount": 1659011596288.0}, {"date": "20260707", "open": 15345.389648, "high": 15461.370117, "low": 15081.919922, "close": 15225.110352, "volume": 678476480.0, "amount": 1384786165760.0}, {"date": "20260708", "open": 15269.820312, "high": 15292.120117, "low": 14907.620117, "close": 14939.730469, "volume": 654790400.0, "amount": 1371167391744.0}, {"date": "20260709", "open": 15038.469727, "high": 15419.120117, "low": 14781.240234, "close": 15398.730469, "volume": 716541184.0, "amount": 1549552451584.0}, {"date": "20260710", "open": 15480.410156, "high": 15581.94043, "low": 15046.669922, "close": 15046.669922, "volume": 828811200.0, "amount": 1825441579008.0}]}, "cyb_index": {"name": "创业板指", "data": [{"date": "20260414", "open": 3507.110107, "high": 3560.300049, "low": 3493.370117, "close": 3558.530029, "volume": 207676368.0, "amount": 660311572480.0}, {"date": "20260415", "open": 3596.080078, "high": 3599.97998, "low": 3491.449951, "close": 3514.959961, "volume": 209895088.0, "amount": 650458562560.0}, {"date": "20260416", "open": 3531.26001, "high": 3629.419922, "low": 3518.360107, "close": 3626.27002, "volume": 218759984.0, "amount": 666616332288.0}, {"date": "20260417", "open": 3643.149902, "high": 3685.100098, "low": 3620.330078, "close": 3678.290039, "volume": 219975632.0, "amount": 688725229568.0}, {"date": "20260420", "open": 3657.350098, "high": 3696.26001, "low": 3642.810059, "close": 3677.580078, "volume": 221537536.0, "amount": 702432673792.0}, {"date": "20260421", "open": 3662.26001, "high": 3695.73999, "low": 3619.47998, "close": 3688.939941, "volume": 202432592.0, "amount": 637778526208.0}, {"date": "20260422", "open": 3660.419922, "high": 3755.75, "low": 3660.090088, "close": 3752.76001, "volume": 214499344.0, "amount": 695245012992.0}, {"date": "20260423", "open": 3769.02002, "high": 3785.22998, "low": 3681.570068, "close": 3720.25, "volume": 240499024.0, "amount": 745895952384.0}, {"date": "20260424", "open": 3682.5, "high": 3699.939941, "low": 3625.0, "close": 3667.790039, "volume": 233839008.0, "amount": 733178560512.0}, {"date": "20260427", "open": 3677.889893, "high": 3686.939941, "low": 3640.110107, "close": 3648.790039, "volume": 222383344.0, "amount": 677951766528.0}, {"date": "20260428", "open": 3623.48999, "high": 3636.929932, "low": 3580.389893, "close": 3596.709961, "volume": 224411104.0, "amount": 668388687872.0}, {"date": "20260429", "open": 3578.419922, "high": 3692.209961, "low": 3578.419922, "close": 3687.169922, "volume": 220640416.0, "amount": 682729603072.0}, {"date": "20260430", "open": 3704.110107, "high": 3718.399902, "low": 3660.219971, "close": 3677.149902, "volume": 207981824.0, "amount": 641724121088.0}, {"date": "20260506", "open": 3760.669922, "high": 3815.070068, "low": 3724.530029, "close": 3778.159912, "volume": 256344192.0, "amount": 842269261824.0}, {"date": "20260507", "open": 3807.98999, "high": 3840.060059, "low": 3761.22998, "close": 3833.060059, "volume": 258151808.0, "amount": 843381538816.0}, {"date": "20260508", "open": 3792.040039, "high": 3840.159912, "low": 3787.169922, "close": 3796.129883, "volume": 249242928.0, "amount": 787340132352.0}, {"date": "20260511", "open": 3829.610107, "high": 3937.870117, "low": 3797.5, "close": 3928.969971, "volume": 279245664.0, "amount": 931590701056.0}, {"date": "20260512", "open": 3947.139893, "high": 3954.98999, "low": 3897.820068, "close": 3934.879883, "volume": 260039136.0, "amount": 845613432832.0}, {"date": "20260513", "open": 3900.73999, "high": 4041.98999, "low": 3893.800049, "close": 4038.330078, "volume": 259133456.0, "amount": 866979807232.0}, {"date": "20260514", "open": 4087.850098, "high": 4090.419922, "low": 3937.600098, "close": 3951.139893, "volume": 262200768.0, "amount": 893930766336.0}, {"date": "20260515", "open": 3957.73999, "high": 4002.72998, "low": 3870.370117, "close": 3929.060059, "volume": 256835648.0, "amount": 882598805504.0}, {"date": "20260518", "open": 3895.070068, "high": 3961.159912, "low": 3883.399902, "close": 3914.879883, "volume": 227942304.0, "amount": 762830913536.0}, {"date": "20260519", "open": 3894.0, "high": 3918.310059, "low": 3808.469971, "close": 3908.439941, "volume": 234560064.0, "amount": 768493748224.0}, {"date": "20260520", "open": 3889.679932, "high": 3947.219971, "low": 3887.149902, "close": 3921.790039, "volume": 232712976.0, "amount": 761853706240.0}, {"date": "20260521", "open": 3962.300049, "high": 4017.810059, "low": 3827.52002, "close": 3829.780029, "volume": 276039808.0, "amount": 902160318464.0}, {"date": "20260522", "open": 3875.810059, "high": 3948.98999, "low": 3856.209961, "close": 3938.5, "volume": 221842496.0, "amount": 791995875328.0}, {"date": "20260525", "open": 3974.969971, "high": 4022.73999, "low": 3905.689941, "close": 4021.159912, "volume": 240534784.0, "amount": 884036403200.0}, {"date": "20260526", "open": 4003.129883, "high": 4057.370117, "low": 3985.51001, "close": 4043.070068, "volume": 237035136.0, "amount": 842366713856.0}, {"date": "20260527", "open": 4053.679932, "high": 4148.22998, "low": 4015.649902, "close": 4045.77002, "volume": 232890880.0, "amount": 839664795648.0}, {"date": "20260528", "open": 4042.080078, "high": 4135.379883, "low": 3971.719971, "close": 4125.069824, "volume": 215603168.0, "amount": 773326766080.0}, {"date": "20260529", "open": 4141.910156, "high": 4158.689941, "low": 4010.120117, "close": 4037.949951, "volume": 242059264.0, "amount": 855661871104.0}, {"date": "20260601", "open": 4057.389893, "high": 4081.419922, "low": 3942.679932, "close": 3950.939941, "volume": 220530336.0, "amount": 734554750976.0}, {"date": "20260602", "open": 3987.409912, "high": 4083.919922, "low": 3946.110107, "close": 4055.870117, "volume": 213338432.0, "amount": 719949070336.0}, {"date": "20260603", "open": 4089.02002, "high": 4218.330078, "low": 4063.199951, "close": 4122.990234, "volume": 228810032.0, "amount": 809214410752.0}, {"date": "20260604", "open": 4072.550049, "high": 4114.240234, "low": 4051.149902, "close": 4088.879883, "volume": 211806752.0, "amount": 703241125888.0}, {"date": "20260605", "open": 4079.949951, "high": 4105.209961, "low": 3933.070068, "close": 3957.939941, "volume": 236781680.0, "amount": 821034876928.0}, {"date": "20260608", "open": 3820.22998, "high": 3903.77002, "low": 3776.929932, "close": 3811.790039, "volume": 236874192.0, "amount": 727291592704.0}, {"date": "20260609", "open": 3865.689941, "high": 3962.899902, "low": 3823.76001, "close": 3961.75, "volume": 216665776.0, "amount": 724188004352.0}, {"date": "20260610", "open": 3897.72998, "high": 3928.360107, "low": 3818.310059, "close": 3854.790039, "volume": 212202864.0, "amount": 653253345280.0}, {"date": "20260611", "open": 3839.189941, "high": 3910.280029, "low": 3755.610107, "close": 3811.25, "volume": 206551136.0, "amount": 654281342976.0}, {"date": "20260612", "open": 3921.090088, "high": 3921.530029, "low": 3822.419922, "close": 3830.350098, "volume": 237871520.0, "amount": 811000659968.0}, {"date": "20260615", "open": 3896.169922, "high": 4033.530029, "low": 3844.080078, "close": 4033.530029, "volume": 228651232.0, "amount": 796207480832.0}, {"date": "20260616", "open": 4065.27002, "high": 4142.430176, "low": 4053.879883, "close": 4102.939941, "volume": 236362096.0, "amount": 836387471360.0}, {"date": "20260617", "open": 4061.300049, "high": 4168.160156, "low": 4058.610107, "close": 4167.049805, "volume": 230896560.0, "amount": 830431821824.0}, {"date": "20260618", "open": 4153.620117, "high": 4272.009766, "low": 4153.620117, "close": 4252.390137, "volume": 234709808.0, "amount": 866583052288.0}, {"date": "20260622", "open": 4272.990234, "high": 4359.390137, "low": 4229.310059, "close": 4359.390137, "volume": 284501056.0, "amount": 1028136370176.0}, {"date": "20260623", "open": 4343.879883, "high": 4350.060059, "low": 4159.47998, "close": 4192.189941, "volume": 255471056.0, "amount": 908340494336.0}, {"date": "20260624", "open": 4181.910156, "high": 4257.25, "low": 4161.580078, "close": 4251.419922, "volume": 242949984.0, "amount": 853839642624.0}, {"date": "20260625", "open": 4278.339844, "high": 4380.410156, "low": 4242.859863, "close": 4371.990234, "volume": 257839088.0, "amount": 983109468160.0}, {"date": "20260626", "open": 4319.410156, "high": 4328.700195, "low": 4175.379883, "close": 4194.209961, "volume": 250844544.0, "amount": 938117562368.0}, {"date": "20260629", "open": 4200.669922, "high": 4265.459961, "low": 4103.629883, "close": 4216.700195, "volume": 252199776.0, "amount": 921211830272.0}, {"date": "20260630", "open": 4217.629883, "high": 4353.109863, "low": 4205.740234, "close": 4342.709961, "volume": 231700720.0, "amount": 864429015040.0}, {"date": "20260701", "open": 4336.160156, "high": 4361.830078, "low": 4222.220215, "close": 4260.720215, "volume": 276652544.0, "amount": 988528640000.0}, {"date": "20260702", "open": 4135.339844, "high": 4168.870117, "low": 3999.570068, "close": 4017.27002, "volume": 260641472.0, "amount": 896791609344.0}, {"date": "20260703", "open": 4010.820068, "high": 4115.629883, "low": 3985.360107, "close": 4019.929932, "volume": 237720368.0, "amount": 809250390016.0}, {"date": "20260706", "open": 4050.879883, "high": 4063.629883, "low": 3903.47998, "close": 3948.860107, "volume": 225436544.0, "amount": 768975699968.0}, {"date": "20260707", "open": 3931.439941, "high": 3976.110107, "low": 3859.429932, "close": 3911.909912, "volume": 193363456.0, "amount": 626050138112.0}, {"date": "20260708", "open": 3932.419922, "high": 3965.389893, "low": 3824.330078, "close": 3845.350098, "volume": 199192272.0, "amount": 655152513024.0}, {"date": "20260709", "open": 3892.120117, "high": 4025.320068, "low": 3812.659912, "close": 4018.169922, "volume": 216994272.0, "amount": 726551560192.0}, {"date": "20260710", "open": 4041.860107, "high": 4060.530029, "low": 3842.350098, "close": 3842.72998, "volume": 256705760.0, "amount": 858396688384.0}]}, "tencent_hk": {"name": "模塑科技", "data": [{"date": "20260414", "open": 11.3, "high": 11.8, "low": 11.25, "close": 11.64, "volume": 359559.92, "amount": 414893792.0}, {"date": "20260415", "open": 11.72, "high": 11.82, "low": 11.4, "close": 11.46, "volume": 290787.0, "amount": 337576960.0}, {"date": "20260416", "open": 11.88, "high": 12.08, "low": 11.69, "close": 11.94, "volume": 562239.48, "amount": 671734720.0}, {"date": "20260417", "open": 11.85, "high": 11.93, "low": 11.54, "close": 11.73, "volume": 363787.04, "amount": 424006272.0}, {"date": "20260420", "open": 11.69, "high": 11.69, "low": 11.41, "close": 11.43, "volume": 332240.18, "amount": 381877024.0}, {"date": "20260421", "open": 11.4, "high": 11.83, "low": 11.23, "close": 11.63, "volume": 409602.76, "amount": 471813152.0}, {"date": "20260422", "open": 11.52, "high": 11.84, "low": 11.5, "close": 11.77, "volume": 331495.7, "amount": 388725184.0}, {"date": "20260423", "open": 11.71, "high": 11.75, "low": 11.1, "close": 11.25, "volume": 470285.92, "amount": 532125568.0}, {"date": "20260424", "open": 11.28, "high": 11.36, "low": 10.86, "close": 10.93, "volume": 309541.0, "amount": 341962112.0}, {"date": "20260427", "open": 10.85, "high": 11.59, "low": 10.8, "close": 11.58, "volume": 510597.28, "amount": 576091520.0}, {"date": "20260428", "open": 11.41, "high": 11.45, "low": 10.98, "close": 11.11, "volume": 373327.84, "amount": 415647552.0}, {"date": "20260429", "open": 11.1, "high": 11.59, "low": 11.04, "close": 11.34, "volume": 344429.0, "amount": 392024320.0}, {"date": "20260430", "open": 11.52, "high": 12.27, "low": 11.51, "close": 12.04, "volume": 648389.12, "amount": 773308480.0}, {"date": "20260506", "open": 12.01, "high": 12.46, "low": 11.91, "close": 12.33, "volume": 462304.8, "amount": 565828800.0}, {"date": "20260507", "open": 12.26, "high": 13.56, "low": 12.23, "close": 13.56, "volume": 893411.04, "amount": 1173279232.0}, {"date": "20260508", "open": 13.82, "high": 14.85, "low": 13.62, "close": 14.5, "volume": 1348893.76, "amount": 1934488704.0}, {"date": "20260511", "open": 14.03, "high": 14.58, "low": 13.96, "close": 14.3, "volume": 1010362.96, "amount": 1441192960.0}, {"date": "20260512", "open": 14.29, "high": 14.37, "low": 13.75, "close": 13.91, "volume": 638715.76, "amount": 892723520.0}, {"date": "20260513", "open": 13.81, "high": 13.91, "low": 13.5, "close": 13.82, "volume": 446755.0, "amount": 613897472.0}, {"date": "20260514", "open": 13.82, "high": 13.86, "low": 13.03, "close": 13.05, "volume": 547573.2, "amount": 733698048.0}, {"date": "20260515", "open": 13.2, "high": 14.36, "low": 12.98, "close": 13.83, "volume": 1130234.48, "amount": 1569515648.0}, {"date": "20260518", "open": 13.7, "high": 14.2, "low": 13.68, "close": 13.97, "volume": 872469.04, "amount": 1218861312.0}, {"date": "20260519", "open": 13.97, "high": 14.3, "low": 13.78, "close": 13.91, "volume": 631532.6, "amount": 882728512.0}, {"date": "20260520", "open": 13.75, "high": 14.38, "low": 13.3, "close": 14.05, "volume": 722610.8, "amount": 999622144.0}, {"date": "20260521", "open": 14.0, "high": 15.46, "low": 13.86, "close": 15.09, "volume": 1879661.76, "amount": 2793788672.0}, {"date": "20260522", "open": 15.18, "high": 15.68, "low": 14.47, "close": 15.45, "volume": 1503576.0, "amount": 2296914176.0}, {"date": "20260525", "open": 15.28, "high": 15.33, "low": 14.81, "close": 14.87, "volume": 891635.92, "amount": 1337702016.0}, {"date": "20260526", "open": 15.0, "high": 16.360001, "low": 14.94, "close": 15.98, "volume": 1520206.72, "amount": 2409072896.0}, {"date": "20260527", "open": 15.6, "high": 16.200001, "low": 15.16, "close": 15.2, "volume": 1153070.24, "amount": 1798378880.0}, {"date": "20260528", "open": 14.85, "high": 15.09, "low": 14.3, "close": 14.6, "volume": 779970.24, "amount": 1139287808.0}, {"date": "20260529", "open": 14.61, "high": 14.85, "low": 13.99, "close": 14.18, "volume": 616237.6, "amount": 886726784.0}, {"date": "20260601", "open": 14.18, "high": 14.35, "low": 13.65, "close": 13.7, "volume": 493140.56, "amount": 685170368.0}, {"date": "20260602", "open": 14.06, "high": 15.07, "low": 13.99, "close": 15.07, "volume": 1181400.72, "amount": 1744300032.0}, {"date": "20260603", "open": 15.04, "high": 16.58, "low": 15.04, "close": 16.58, "volume": 1480884.32, "amount": 2389154816.0}, {"date": "20260604", "open": 17.15, "high": 18.24, "low": 16.879999, "close": 17.799999, "volume": 1880836.48, "amount": 3332457728.0}, {"date": "20260605", "open": 18.27, "high": 18.66, "low": 16.9, "close": 17.290001, "volume": 1498652.96, "amount": 2631512064.0}, {"date": "20260608", "open": 15.99, "high": 17.08, "low": 15.99, "close": 16.51, "volume": 982320.56, "amount": 1630204928.0}, {"date": "20260609", "open": 16.52, "high": 16.709999, "low": 15.8, "close": 16.17, "volume": 786366.48, "amount": 1269161472.0}, {"date": "20260610", "open": 15.85, "high": 15.87, "low": 14.86, "close": 15.22, "volume": 768565.44, "amount": 1173536384.0}, {"date": "20260611", "open": 14.79, "high": 15.27, "low": 14.49, "close": 14.67, "volume": 561943.12, "amount": 826003648.0}, {"date": "20260612", "open": 14.8, "high": 14.95, "low": 14.19, "close": 14.4, "volume": 780417.68, "amount": 1136003328.0}, {"date": "20260615", "open": 14.63, "high": 15.84, "low": 14.6, "close": 15.84, "volume": 426371.28, "amount": 656525952.0}, {"date": "20260616", "open": 16.120001, "high": 16.629999, "low": 15.8, "close": 16.110001, "volume": 1040781.2, "amount": 1690308608.0}, {"date": "20260617", "open": 16.26, "high": 16.309999, "low": 15.6, "close": 15.96, "volume": 702442.0, "amount": 1118037120.0}, {"date": "20260618", "open": 15.95, "high": 16.139999, "low": 15.43, "close": 15.45, "volume": 645330.64, "amount": 1010415552.0}, {"date": "20260622", "open": 15.44, "high": 16.0, "low": 14.7, "close": 15.18, "volume": 691828.88, "amount": 1054451968.0}, {"date": "20260623", "open": 15.03, "high": 15.6, "low": 14.75, "close": 14.98, "volume": 729692.96, "amount": 1108425088.0}, {"date": "20260624", "open": 15.2, "high": 15.22, "low": 14.3, "close": 14.52, "volume": 629381.12, "amount": 922039808.0}, {"date": "20260625", "open": 14.4, "high": 14.97, "low": 13.81, "close": 13.89, "volume": 741880.16, "amount": 1055418368.0}, {"date": "20260626", "open": 14.08, "high": 15.28, "low": 13.78, "close": 14.13, "volume": 1159164.8, "amount": 1697183232.0}, {"date": "20260629", "open": 14.19, "high": 14.57, "low": 13.4, "close": 13.86, "volume": 864239.28, "amount": 1212821376.0}, {"date": "20260630", "open": 14.32, "high": 15.07, "low": 13.95, "close": 14.76, "volume": 760272.4, "amount": 1106313728.0}, {"date": "20260701", "open": 14.51, "high": 16.059999, "low": 14.51, "close": 15.34, "volume": 852681.92, "amount": 1310149376.0}, {"date": "20260702", "open": 15.78, "high": 16.870001, "low": 15.59, "close": 16.870001, "volume": 1137587.36, "amount": 1877232128.0}, {"date": "20260703", "open": 16.08, "high": 18.25, "low": 16.08, "close": 17.6, "volume": 1988586.88, "amount": 3413391616.0}, {"date": "20260706", "open": 17.129999, "high": 17.18, "low": 16.299999, "close": 16.75, "volume": 1095065.6, "amount": 1833422080.0}, {"date": "20260707", "open": 16.67, "high": 17.379999, "low": 16.040001, "close": 16.15, "volume": 796006.4, "amount": 1319359872.0}, {"date": "20260708", "open": 16.02, "high": 16.059999, "low": 14.6, "close": 14.6, "volume": 658608.28, "amount": 996006272.0}, {"date": "20260709", "open": 14.97, "high": 15.75, "low": 14.86, "close": 15.18, "volume": 570456.88, "amount": 866722624.0}, {"date": "20260710", "open": 15.32, "high": 16.4, "low": 15.19, "close": 15.61, "volume": 729416.32, "amount": 1153488128.0}]}, "macro_pmi": [{"date": "202606", "value": 50.3}, {"date": "202605", "value": 50.0}, {"date": "202604", "value": 50.3}, {"date": "202603", "value": 50.4}, {"date": "202602", "value": 49.0}, {"date": "202601", "value": 49.3}, {"date": "202512", "value": 50.1}, {"date": "202511", "value": 49.2}, {"date": "202510", "value": 49.0}, {"date": "202509", "value": 49.8}, {"date": "202508", "value": 49.4}, {"date": "202507", "value": 49.3}, {"date": "202506", "value": 49.7}, {"date": "202505", "value": 49.5}, {"date": "202504", "value": 49.0}, {"date": "202503", "value": 50.5}, {"date": "202502", "value": 50.2}, {"date": "202501", "value": 49.1}, {"date": "202412", "value": 50.1}, {"date": "202411", "value": 50.3}, {"date": "202410", "value": 50.1}, {"date": "202409", "value": 49.8}, {"date": "202408", "value": 49.1}, {"date": "202407", "value": 49.4}, {"date": "202406", "value": 49.5}, {"date": "202405", "value": 49.5}, {"date": "202404", "value": 50.4}, {"date": "202403", "value": 50.8}, {"date": "202402", "value": 49.1}, {"date": "202401", "value": 49.2}], "quotes": {"600519": {"name": "贵州茅台", "price": 1204.98, "chg": 1.93, "pe": 13.82, "pb": 5.57, "mv": 15063.23, "vol": 5.22, "hsl": 0.42, "amount": 62.23}, "300750": {"name": "宁德时代", "price": 348.76, "chg": -7.12, "pe": 19.45, "pb": 4.45, "mv": 16135.91, "vol": 55.6, "hsl": 1.31, "amount": 198.68}, "002594": {"name": "比亚迪", "price": 90.0, "chg": 3.6, "pe": 50.22, "pb": 3.54, "mv": 8205.48, "vol": 70.93, "hsl": 2.03, "amount": 62.83}, "00700": {"name": "腾讯控股", "price": 460.2, "chg": -2.0, "pe": 15.92, "pb": 3.29, "mv": 41843.76, "vol": 4044.03, "hsl": 0.44, "amount": 187.61}, "000001": {"name": "上证指数", "price": 3996.16, "chg": -1.0, "pe": 17.73, "vol": 62745.01, "amount": 15631.09}, "002766": {"name": "索菱股份", "code": "002766", "price": 3.57, "chg": 2.59, "pe": -42.23, "pb": 1.24, "mv": 30.7, "hsl": 2.67, "vol": 22.89, "amount": 0.82}}, "screener_macd": [{"code": "920943", "name": "优机股份", "price": 15.82, "chg": 29.99}, {"code": "688722", "name": "同益中", "price": 18.31, "chg": 19.99}, {"code": "300918", "name": "南山智尚", "price": 12.37, "chg": 19.52}, {"code": "920885", "name": "星辰科技", "price": 14.13, "chg": 19.44}, {"code": "688101", "name": "三达膜", "price": 17.11, "chg": 11.39}, {"code": "002414", "name": "高德红外", "price": 14.64, "chg": 9.99}, {"code": "002519", "name": "银河电子", "price": 5.98, "chg": 9.32}], "screener_main_flow": [{"code": "002185", "name": "华天科技", "price": 25.31, "chg": 6.66, "flow": 33.76}, {"code": "301583", "name": "N托伦斯", "price": 216.7, "chg": 858.85, "flow": 26.23}, {"code": "300475", "name": "香农芯创", "price": 271.0, "chg": 1.13, "flow": 12.98}, {"code": "600118", "name": "中国卫星", "price": 90.02, "chg": 10.0, "flow": 11.62}, {"code": "300065", "name": "海兰信", "price": 28.79, "chg": 20.01, "flow": 10.84}, {"code": "002202", "name": "金风科技", "price": 22.36, "chg": 9.99, "flow": 10.8}, {"code": "000938", "name": "紫光股份", "price": 38.41, "chg": 7.65, "flow": 10.36}, {"code": "688041", "name": "海光信息", "price": 353.0, "chg": -2.88, "flow": 10.36}, {"code": "600879", "name": "XD航天电", "price": 23.29, "chg": 10.01, "flow": 10.24}, {"code": "002594", "name": "比亚迪", "price": 90.0, "chg": 3.6, "flow": 10.22}, {"code": "002241", "name": "歌尔股份", "price": 22.57, "chg": 5.62, "flow": 10.2}, {"code": "603019", "name": "中科曙光", "price": 107.5, "chg": 3.38, "flow": 9.57}, {"code": "603083", "name": "剑桥科技", "price": 199.09, "chg": -1.44, "flow": 8.11}, {"code": "600519", "name": "贵州茅台", "price": 1204.98, "chg": 1.93, "flow": 7.86}, {"code": "600410", "name": "华胜天成", "price": 16.56, "chg": 10.03, "flow": 7.36}], "news": [{"title": "机构策略：红利投资依然具有中长期确定性", "time": "2026-07-10 09:25", "source": "证券时报", "summary": "国内宽松基调延续，变数更多在海外。AI技术、安全可控、产业出海、红利投资具有中长期确定性。"}, {"title": "7月资金面或维持中性偏松，政府债供给将迎加速", "time": "2026-07-09 10:15", "source": "财联社", "summary": "超9成机构认为7月资金面维持均衡偏松，降准概率略高于降息。"}, {"title": "沪指震荡微跌，煤炭银行板块拉升，创新药概念活跃", "time": "2026-07-06 15:25", "source": "证券时报", "summary": "行情从极度集中的算力硬件端向更具性价比领域延伸，形成高低切换、多点开花格局。"}, {"title": "A股交易新规今日起正式施行", "time": "2026-07-06 08:42", "source": "证券之星", "summary": "主板ST股涨跌幅5%调至10%，央行开展10000亿元买断式逆回购操作。"}], "hk_hsi_etf": {"name": "恒生指数ETF", "code": "513600", "data": [{"date": "20260414", "open": 2.862, "high": 2.863, "low": 2.83, "close": 2.845, "volume": 51.776536}, {"date": "20260415", "open": 2.875, "high": 2.88, "low": 2.853, "close": 2.856, "volume": 34.4019}, {"date": "20260416", "open": 2.867, "high": 2.899, "low": 2.867, "close": 2.895, "volume": 31.458}, {"date": "20260417", "open": 2.883, "high": 2.891, "low": 2.866, "close": 2.872, "volume": 23.0671}, {"date": "20260420", "open": 2.874, "high": 2.902, "low": 2.872, "close": 2.9, "volume": 31.5503}, {"date": "20260421", "open": 2.902, "high": 2.918, "low": 2.898, "close": 2.911, "volume": 29.8715}, {"date": "20260422", "open": 2.9, "high": 2.9, "low": 2.874, "close": 2.882, "volume": 35.0576}, {"date": "20260423", "open": 2.878, "high": 2.878, "low": 2.851, "close": 2.855, "volume": 28.2475}, {"date": "20260424", "open": 2.842, "high": 2.864, "low": 2.826, "close": 2.859, "volume": 28.4619}, {"date": "20260427", "open": 2.855, "high": 2.871, "low": 2.846, "close": 2.85, "volume": 29.1796}, {"date": "20260428", "open": 2.835, "high": 2.845, "low": 2.815, "close": 2.823, "volume": 28.136}, {"date": "20260429", "open": 2.835, "high": 2.866, "low": 2.834, "close": 2.861, "volume": 28.3478}, {"date": "20260430", "open": 2.853, "high": 2.864, "low": 2.832, "close": 2.84, "volume": 39.4318}, {"date": "20260506", "open": 2.853, "high": 2.873, "low": 2.841, "close": 2.867, "volume": 44.9932}, {"date": "20260507", "open": 2.895, "high": 2.915, "low": 2.895, "close": 2.91, "volume": 39.3552}, {"date": "20260508", "open": 2.887, "high": 2.893, "low": 2.874, "close": 2.892, "volume": 25.181}, {"date": "20260511", "open": 2.887, "high": 2.888, "low": 2.868, "close": 2.886, "volume": 31.4451}, {"date": "20260512", "open": 2.887, "high": 2.905, "low": 2.877, "close": 2.878, "volume": 31.2541}, {"date": "20260513", "open": 2.878, "high": 2.888, "low": 2.864, "close": 2.88, "volume": 33.7782}, {"date": "20260514", "open": 2.922, "high": 2.926, "low": 2.875, "close": 2.878, "volume": 42.8771}, {"date": "20260515", "open": 2.875, "high": 2.879, "low": 2.826, "close": 2.835, "volume": 46.7828}, {"date": "20260518", "open": 2.835, "high": 2.835, "low": 2.795, "close": 2.803, "volume": 33.1138}, {"date": "20260519", "open": 2.803, "high": 2.824, "low": 2.803, "close": 2.822, "volume": 29.6347}, {"date": "20260520", "open": 2.81, "high": 2.814, "low": 2.796, "close": 2.806, "volume": 24.7628}, {"date": "20260521", "open": 2.825, "high": 2.826, "low": 2.775, "close": 2.776, "volume": 51.4816}, {"date": "20260522", "open": 2.797, "high": 2.806, "low": 2.784, "close": 2.795, "volume": 29.5689}, {"date": "20260525", "open": 2.791, "high": 2.794, "low": 2.782, "close": 2.785, "volume": 12.3509}, {"date": "20260526", "open": 2.785, "high": 2.803, "low": 2.769, "close": 2.792, "volume": 28.7796}, {"date": "20260527", "open": 2.79, "high": 2.79, "low": 2.75, "close": 2.753, "volume": 27.7399}, {"date": "20260528", "open": 2.74, "high": 2.742, "low": 2.695, "close": 2.722, "volume": 33.3982}, {"date": "20260529", "open": 2.736, "high": 2.749, "low": 2.722, "close": 2.743, "volume": 35.4686}, {"date": "20260601", "open": 2.739, "high": 2.768, "low": 2.735, "close": 2.763, "volume": 43.8619}, {"date": "20260602", "open": 2.76, "high": 2.826, "low": 2.758, "close": 2.821, "volume": 59.0814}, {"date": "20260603", "open": 2.819, "high": 2.825, "low": 2.786, "close": 2.793, "volume": 31.071624}, {"date": "20260604", "open": 2.776, "high": 2.779, "low": 2.741, "close": 2.749, "volume": 33.7311}, {"date": "20260605", "open": 2.738, "high": 2.749, "low": 2.718, "close": 2.728, "volume": 35.8773}, {"date": "20260608", "open": 2.691, "high": 2.711, "low": 2.67, "close": 2.684, "volume": 45.855492}, {"date": "20260609", "open": 2.679, "high": 2.702, "low": 2.672, "close": 2.698, "volume": 55.8252}, {"date": "20260610", "open": 2.67, "high": 2.677, "low": 2.648, "close": 2.666, "volume": 36.0366}, {"date": "20260611", "open": 2.66, "high": 2.68, "low": 2.623, "close": 2.64, "volume": 46.9879}, {"date": "20260612", "open": 2.676, "high": 2.7, "low": 2.662, "close": 2.685, "volume": 55.5391}, {"date": "20260615", "open": 2.719, "high": 2.729, "low": 2.703, "close": 2.708, "volume": 41.720884000000005}, {"date": "20260616", "open": 2.704, "high": 2.707, "low": 2.656, "close": 2.657, "volume": 44.255}, {"date": "20260617", "open": 2.663, "high": 2.673, "low": 2.642, "close": 2.646, "volume": 24.7937}, {"date": "20260618", "open": 2.628, "high": 2.638, "low": 2.59, "close": 2.597, "volume": 35.5916}, {"date": "20260622", "open": 2.592, "high": 2.608, "low": 2.561, "close": 2.607, "volume": 57.913316}, {"date": "20260623", "open": 2.606, "high": 2.606, "low": 2.543, "close": 2.545, "volume": 40.563856}, {"date": "20260624", "open": 2.56, "high": 2.58, "low": 2.547, "close": 2.57, "volume": 45.1345}, {"date": "20260625", "open": 2.559, "high": 2.562, "low": 2.521, "close": 2.523, "volume": 68.635304}, {"date": "20260626", "open": 2.505, "high": 2.509, "low": 2.467, "close": 2.481, "volume": 51.095}, {"date": "20260629", "open": 2.494, "high": 2.53, "low": 2.49, "close": 2.522, "volume": 71.838352}, {"date": "20260630", "open": 2.51, "high": 2.521, "low": 2.476, "close": 2.49, "volume": 48.8689}, {"date": "20260701", "open": 2.495, "high": 2.504, "low": 2.488, "close": 2.498, "volume": 15.3548}, {"date": "20260702", "open": 2.516, "high": 2.552, "low": 2.505, "close": 2.515, "volume": 95.786264}, {"date": "20260703", "open": 2.53, "high": 2.566, "low": 2.53, "close": 2.548, "volume": 89.619704}, {"date": "20260706", "open": 2.554, "high": 2.586, "low": 2.536, "close": 2.571, "volume": 80.938896}, {"date": "20260707", "open": 2.567, "high": 2.605, "low": 2.562, "close": 2.569, "volume": 83.8206}, {"date": "20260708", "open": 2.572, "high": 2.668, "low": 2.572, "close": 2.651, "volume": 111.4282}, {"date": "20260709", "open": 2.653, "high": 2.674, "low": 2.623, "close": 2.634, "volume": 101.02110400000001}, {"date": "20260710", "open": 2.645, "high": 2.683, "low": 2.635, "close": 2.659, "volume": 80.1798}]}, "hk_hstech_etf": {"name": "恒生科技ETF", "code": "513180", "data": [{"date": "20260414", "open": 0.628, "high": 0.628, "low": 0.616, "close": 0.623, "volume": 5571.123712}, {"date": "20260415", "open": 0.634, "high": 0.636, "low": 0.628, "close": 0.63, "volume": 7051.885568000001}, {"date": "20260416", "open": 0.636, "high": 0.652, "low": 0.636, "close": 0.65, "volume": 8051.112448000001}, {"date": "20260417", "open": 0.647, "high": 0.65, "low": 0.641, "close": 0.644, "volume": 4714.38336}, {"date": "20260420", "open": 0.647, "high": 0.654, "low": 0.644, "close": 0.649, "volume": 6204.1856}, {"date": "20260421", "open": 0.65, "high": 0.652, "low": 0.643, "close": 0.648, "volume": 4820.179968}, {"date": "20260422", "open": 0.642, "high": 0.643, "low": 0.635, "close": 0.639, "volume": 5204.054528000001}, {"date": "20260423", "open": 0.638, "high": 0.638, "low": 0.624, "close": 0.625, "volume": 5858.049024}, {"date": "20260424", "open": 0.62, "high": 0.631, "low": 0.614, "close": 0.628, "volume": 7213.529087999999}, {"date": "20260427", "open": 0.631, "high": 0.637, "low": 0.628, "close": 0.632, "volume": 4459.136512}, {"date": "20260428", "open": 0.629, "high": 0.632, "low": 0.618, "close": 0.621, "volume": 4632.090112}, {"date": "20260429", "open": 0.627, "high": 0.63, "low": 0.623, "close": 0.628, "volume": 5599.282688}, {"date": "20260430", "open": 0.625, "high": 0.629, "low": 0.62, "close": 0.627, "volume": 5633.0117119999995}, {"date": "20260506", "open": 0.635, "high": 0.642, "low": 0.63, "close": 0.636, "volume": 8634.561536}, {"date": "20260507", "open": 0.649, "high": 0.655, "low": 0.646, "close": 0.654, "volume": 8399.1168}, {"date": "20260508", "open": 0.648, "high": 0.653, "low": 0.644, "close": 0.653, "volume": 5490.527232}, {"date": "20260511", "open": 0.649, "high": 0.652, "low": 0.645, "close": 0.651, "volume": 7216.421376}, {"date": "20260512", "open": 0.652, "high": 0.655, "low": 0.644, "close": 0.645, "volume": 6019.045888000001}, {"date": "20260513", "open": 0.643, "high": 0.652, "low": 0.639, "close": 0.646, "volume": 5935.569407999999}, {"date": "20260514", "open": 0.666, "high": 0.667, "low": 0.645, "close": 0.646, "volume": 9907.433472}, {"date": "20260515", "open": 0.643, "high": 0.644, "low": 0.626, "close": 0.629, "volume": 8583.713792}, {"date": "20260518", "open": 0.624, "high": 0.624, "low": 0.614, "close": 0.617, "volume": 7334.203392}, {"date": "20260519", "open": 0.616, "high": 0.621, "low": 0.613, "close": 0.62, "volume": 6355.289088}, {"date": "20260520", "open": 0.616, "high": 0.622, "low": 0.614, "close": 0.621, "volume": 5335.571456000001}, {"date": "20260521", "open": 0.626, "high": 0.628, "low": 0.607, "close": 0.608, "volume": 7190.378495999999}, {"date": "20260522", "open": 0.614, "high": 0.62, "low": 0.609, "close": 0.618, "volume": 5969.77408}, {"date": "20260525", "open": 0.614, "high": 0.618, "low": 0.612, "close": 0.617, "volume": 2848.61824}, {"date": "20260526", "open": 0.624, "high": 0.631, "low": 0.617, "close": 0.63, "volume": 10049.347584000001}, {"date": "20260527", "open": 0.629, "high": 0.634, "low": 0.618, "close": 0.62, "volume": 5596.977664}, {"date": "20260528", "open": 0.619, "high": 0.621, "low": 0.61, "close": 0.618, "volume": 5434.786816}, {"date": "20260529", "open": 0.623, "high": 0.628, "low": 0.615, "close": 0.62, "volume": 6942.511104000001}, {"date": "20260601", "open": 0.619, "high": 0.633, "low": 0.619, "close": 0.628, "volume": 7580.930048}, {"date": "20260602", "open": 0.629, "high": 0.654, "low": 0.629, "close": 0.652, "volume": 10302.314495999999}, {"date": "20260603", "open": 0.65, "high": 0.651, "low": 0.638, "close": 0.641, "volume": 5470.6237439999995}, {"date": "20260604", "open": 0.633, "high": 0.636, "low": 0.628, "close": 0.631, "volume": 4251.722496}, {"date": "20260605", "open": 0.629, "high": 0.63, "low": 0.618, "close": 0.621, "volume": 4863.0696960000005}, {"date": "20260608", "open": 0.607, "high": 0.612, "low": 0.6, "close": 0.603, "volume": 5657.257472}, {"date": "20260609", "open": 0.604, "high": 0.612, "low": 0.602, "close": 0.61, "volume": 5099.398144}, {"date": "20260610", "open": 0.603, "high": 0.606, "low": 0.593, "close": 0.599, "volume": 5802.034176}, {"date": "20260611", "open": 0.598, "high": 0.602, "low": 0.585, "close": 0.589, "volume": 5255.117824}, {"date": "20260612", "open": 0.597, "high": 0.601, "low": 0.594, "close": 0.595, "volume": 4069.12128}, {"date": "20260615", "open": 0.604, "high": 0.606, "low": 0.6, "close": 0.602, "volume": 3326.6982399999997}, {"date": "20260616", "open": 0.602, "high": 0.603, "low": 0.589, "close": 0.59, "volume": 3811.9480320000002}, {"date": "20260617", "open": 0.589, "high": 0.592, "low": 0.585, "close": 0.591, "volume": 3406.104832}, {"date": "20260618", "open": 0.586, "high": 0.588, "low": 0.578, "close": 0.58, "volume": 4971.923968}, {"date": "20260622", "open": 0.582, "high": 0.582, "low": 0.572, "close": 0.582, "volume": 6570.6368}, {"date": "20260623", "open": 0.578, "high": 0.579, "low": 0.557, "close": 0.559, "volume": 7034.42432}, {"date": "20260624", "open": 0.562, "high": 0.577, "low": 0.561, "close": 0.57, "volume": 7140.068351999999}, {"date": "20260625", "open": 0.57, "high": 0.57, "low": 0.555, "close": 0.559, "volume": 5670.4476159999995}, {"date": "20260626", "open": 0.554, "high": 0.554, "low": 0.538, "close": 0.542, "volume": 6567.241215999999}, {"date": "20260629", "open": 0.548, "high": 0.562, "low": 0.548, "close": 0.561, "volume": 7499.200512}, {"date": "20260630", "open": 0.56, "high": 0.57, "low": 0.558, "close": 0.567, "volume": 5843.244544}, {"date": "20260701", "open": 0.569, "high": 0.57, "low": 0.566, "close": 0.567, "volume": 1728.7042559999998}, {"date": "20260702", "open": 0.573, "high": 0.581, "low": 0.563, "close": 0.564, "volume": 5765.68064}, {"date": "20260703", "open": 0.567, "high": 0.577, "low": 0.566, "close": 0.57, "volume": 5556.5020159999995}, {"date": "20260706", "open": 0.57, "high": 0.578, "low": 0.564, "close": 0.574, "volume": 5102.9201920000005}, {"date": "20260707", "open": 0.57, "high": 0.589, "low": 0.57, "close": 0.572, "volume": 6716.503551999999}, {"date": "20260708", "open": 0.573, "high": 0.606, "low": 0.573, "close": 0.599, "volume": 10188.089344}, {"date": "20260709", "open": 0.601, "high": 0.614, "low": 0.594, "close": 0.602, "volume": 9750.817792}, {"date": "20260710", "open": 0.607, "high": 0.617, "low": 0.6, "close": 0.606, "volume": 6817.411072}]}, "tech_sectors": {"quantum": {"name": "量子计算", "code": "688027", "type": "个股", "proxy": "国盾量子", "price": 446.7, "chg": -1.15, "note": "A股量子通信/计算龙头，板块暂无独立指数"}, "ai_app": {"name": "AI应用", "code": "515980", "type": "ETF", "proxy": "人工智能ETF华富", "price": 1.2209, "chg": -2.64, "note": "中证人工智能主题，覆盖AI应用层"}, "ai_hw": {"name": "AI硬件", "code": "512480", "type": "ETF", "proxy": "半导体ETF国联安", "price": 1.3563, "chg": -6.38, "note": "半导体全产业链，AI算力硬件底座"}, "chip_eq": {"name": "芯片设备", "code": "881321", "type": "板块", "proxy": "半导体设备", "price": 3856.19, "chg": -7.12, "note": "半导体设备/材料，国产替代核心"}, "space": {"name": "商业航天", "code": "880548", "type": "板块", "proxy": "商业航天", "price": 2155.3, "chg": 2.04, "note": "卫星互联网/火箭/测控，政策强支持"}, "fusion": {"name": "可控核聚变", "code": "880666", "type": "板块", "proxy": "可控核聚变", "price": 2242.78, "chg": 0.94, "note": "超导/等离子体/核技术，前沿突破期"}, "nuclear": {"name": "核电核能", "code": "880537", "type": "板块", "proxy": "核电核能", "price": 1825.76, "chg": 1.4, "note": "核电运营/设备，算力电力刚需"}, "newenergy": {"name": "新能源", "code": "516160", "type": "ETF", "proxy": "新能源ETF南方", "price": 2.5699, "chg": -2.75, "note": "光伏/风电/储能，供给出清中"}, "gochina": {"name": "中国企业出海", "code": "880786", "type": "板块", "proxy": "海外业务", "price": 2978.61, "chg": -2.62, "note": "跨境电商/工程机械/品牌出海"}}}</script>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">📊 宏观共振交易系统</div>
+    <div class="header-sub">MPI Macro Resonance Trading System · 通达信数据驱动</div>
+  </div>
+  <div class="header-right">
+    <div id="header-date" style="font-size:12px;opacity:0.7;"></div>
+    <div id="mpi-a-badge" class="mpi-badge" style="background:rgba(255,255,255,0.15);">
+      <div class="dot" id="mpi-a-dot"></div>
+      <span id="mpi-a-text">A股MPI计算中...</span>
+    </div>
+    <div id="mpi-hk-badge" class="mpi-badge" style="background:rgba(255,255,255,0.15);">
+      <div class="dot" id="mpi-hk-dot"></div>
+      <span id="mpi-hk-text">港股MPI计算中...</span>
+    </div>
+  </div>
+</div>
+
+<!-- Nav Tabs -->
+<div class="nav-tabs">
+  <div class="nav-tab active" data-tab="overview">🏠 总览看板</div>
+  <div class="nav-tab" data-tab="mpi">🌐 MPI宏观指数</div>
+  <div class="nav-tab" data-tab="seesaw">⚖️ 资金跷跷板</div>
+  <div class="nav-tab" data-tab="screening">🎯 四层选股</div>
+  <div class="nav-tab" data-tab="technical">📈 技术分析</div>
+  <div class="nav-tab" data-tab="signals">⚡ 交易信号</div>
+  <div class="nav-tab" data-tab="flow">💰 资金流向</div>
+  <div class="nav-tab" data-tab="tech">🚀 科技赛道</div>
+  <div class="nav-tab" data-tab="news">📰 市场资讯</div>
+</div>
+
+<div class="container">
+
+<!-- ===== OVERVIEW ===== -->
+<div class="tab-content active" id="tab-overview">
+  <div class="grid-4" id="idx-cards"></div>
+  
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">
+      上证指数日K线走势
+      <span class="badge tag-blue" id="sh-trend-badge">趋势分析中</span>
+    </div>
+    <div class="chart-box"><canvas id="chart-sh"></canvas></div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title">A股 MPI <span class="badge tag-orange" id="mpi-mini-a-badge">--</span></div>
+      <div class="chart-box-sm"><canvas id="chart-mpi-mini-a"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">港股 MPI <span class="badge tag-orange" id="mpi-mini-hk-badge">--</span> <span style="font-size:10px;color:var(--gray);">恒生科技ETF</span></div>
+      <div class="chart-box-sm"><canvas id="chart-mpi-mini-hk"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">PMI制造业景气度 <span class="badge tag-gray">50为荣枯线</span></div>
+      <div class="chart-box-sm"><canvas id="chart-pmi-mini"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">交易框架总纲</div>
+    <div class="framework-flow">
+      <div class="flow-step">
+        <div class="num" style="background:var(--red-bg);color:var(--red);">1</div>
+        <div class="title">宏观定方向</div>
+        <div class="sub">定仓位 · 定生死</div>
+        <div class="content">MPI指数判断流动性水位与风险偏好，决定仓位战略</div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="flow-step">
+        <div class="num" style="background:var(--blue-bg);color:var(--blue);">2</div>
+        <div class="title">赛道定结构</div>
+        <div class="sub">定强弱 · 定赔率</div>
+        <div class="content">政策方向+行业景气度筛选，顺资金跷跷板方向</div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="flow-step">
+        <div class="num" style="background:var(--purple-bg);color:var(--purple);">3</div>
+        <div class="title">技术定节奏</div>
+        <div class="sub">定买点 · 定止损</div>
+        <div class="content">MA/MACD/RSI/BOLL验证资金共识，优化盈亏比</div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="flow-step">
+        <div class="num" style="background:var(--orange-bg);color:var(--orange);">4</div>
+        <div class="title">执行定盈亏</div>
+        <div class="sub">定真假 · 定离场</div>
+        <div class="content">四者共振才出手，单一信号一律放弃</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">科技前沿赛道快览 <span class="badge tag-purple">通达信实时</span> <a href="#" onclick="document.querySelector('[data-tab=tech]').click();return false;" style="font-size:12px;color:var(--blue);margin-left:auto;">查看完整赛道 →</a></div>
+    <div class="grid-5" id="tech-overview-mini"></div>
+  </div>
+</div>
+
+<!-- ===== MPI (DUAL) ===== -->
+<div class="tab-content" id="tab-mpi">
+  <!-- Dual MPI Panels -->
+  <div class="grid-2">
+    <!-- A-Share MPI -->
+    <div class="card">
+      <div class="card-title">🇨🇳 A股 MPI 宏观情绪指数 <span class="badge tag-orange" id="mpi-full-badge-a">--</span></div>
+      <div class="mpi-container">
+        <div class="mpi-gauge">
+          <svg width="180" height="180" viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="gauge-grad-a" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#22c55e"/>
+                <stop offset="50%" style="stop-color:#f59e0b"/>
+                <stop offset="100%" style="stop-color:#ef4444"/>
+              </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="85" fill="none" stroke="#e2e8f0" stroke-width="14"/>
+            <circle cx="100" cy="100" r="85" fill="none" stroke="url(#gauge-grad-a)" stroke-width="14"
+              stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="534"
+              id="gauge-arc-a" transform="rotate(-90 100 100)"/>
+          </svg>
+          <div class="mpi-score">
+            <div class="val" id="mpi-val-a" style="font-size:32px;">--</div>
+            <div class="label" id="mpi-label-a">计算中</div>
+          </div>
+        </div>
+        <div class="mpi-factors" id="mpi-factors-a"></div>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:#f0f9ff;border-radius:8px;font-size:12px;color:#3b82f6;" id="a-anchor-desc"></div>
+    </div>
+
+    <!-- HK MPI -->
+    <div class="card">
+      <div class="card-title">🇭🇰 港股 MPI 宏观情绪指数 <span class="badge tag-orange" id="mpi-full-badge-hk">--</span> <span style="font-size:10px;color:var(--gray);">(恒生科技ETF)</span></div>
+      <div class="mpi-container">
+        <div class="mpi-gauge">
+          <svg width="180" height="180" viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="gauge-grad-hk" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#22c55e"/>
+                <stop offset="50%" style="stop-color:#f59e0b"/>
+                <stop offset="100%" style="stop-color:#ef4444"/>
+              </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="85" fill="none" stroke="#e2e8f0" stroke-width="14"/>
+            <circle cx="100" cy="100" r="85" fill="none" stroke="url(#gauge-grad-hk)" stroke-width="14"
+              stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="534"
+              id="gauge-arc-hk" transform="rotate(-90 100 100)"/>
+          </svg>
+          <div class="mpi-score">
+            <div class="val" id="mpi-val-hk" style="font-size:32px;">--</div>
+            <div class="label" id="mpi-label-hk">计算中</div>
+          </div>
+        </div>
+        <div class="mpi-factors" id="mpi-factors-hk"></div>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:#f0f9ff;border-radius:8px;font-size:12px;color:#3b82f6;" id="hk-anchor-desc"></div>
+    </div>
+  </div>
+
+  <!-- A-Share Position Advice -->
+  <div class="card"><div class="card-title">🇨🇳 A股仓位战略建议</div><div id="pos-advice-a"></div></div>
+
+  <!-- HK Position Advice -->
+  <div class="card"><div class="card-title">🇭🇰 港股仓位战略建议</div><div id="pos-advice-hk"></div></div>
+
+  <!-- MPI Comparison Chart -->
+  <div class="card">
+    <div class="card-title">🇨🇳 A股 MPI vs 🇭🇰 港股 MPI 对比走势 <span class="badge tag-gray" style="font-size:11px;">港股MPI因子基于恒生科技ETF净值</span></div>
+    <div class="chart-box"><canvas id="chart-mpi-compare"></canvas></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">PMI制造业景气度</div>
+      <div class="chart-box"><canvas id="chart-pmi-full"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">宏观关键指标 (A股)</div>
+      <table>
+        <thead><tr><th>指标</th><th>最新值</th><th>趋势</th><th>信号</th></tr></thead>
+        <tbody id="macro-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SEESAW ===== -->
+<div class="tab-content" id="tab-seesaw">
+  <div class="card">
+    <div class="card-title">资金跷跷板效应追踪</div>
+    <div class="seesaw-container">
+      <div class="seesaw">
+        <div class="seesaw-bar" id="seesaw-bar"></div>
+        <div class="seesaw-side left">
+          <div class="title" style="color:var(--green);">避险资产</div>
+          <div class="items">黄金 · 美债 · 防御板块</div>
+        </div>
+        <div class="seesaw-side right">
+          <div class="title" style="color:var(--red);">风险资产</div>
+          <div class="items">股票 · 数字资产 · 成长板块</div>
+        </div>
+        <div class="seesaw-center">
+          <div class="label">当前跷跷板倾斜</div>
+          <div class="value" id="seesaw-tilt">--</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">🇨🇳 上证指数 vs 🇭🇰 恒生指数/恒生科技 <span class="badge tag-gray" style="font-size:11px;">港股用ETF净值(100%跟踪)</span></div>
+      <div class="chart-box"><canvas id="chart-compare"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">板块资金轮动</div>
+      <table>
+        <thead><tr><th>方向</th><th>代表标的</th><th>涨跌</th><th>资金信号</th></tr></thead>
+        <tbody id="rotation-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">全球资产联动观察</div>
+    <div class="grid-4">
+      <div class="idx-card">
+        <div class="name">🇺🇸 美股(道琼斯)</div>
+        <div class="price" style="font-size:18px;">--</div>
+        <div class="chg" style="font-size:12px;">外部数据</div>
+        <div class="meta"><span>风险偏好锚</span></div>
+      </div>
+      <div class="idx-card">
+        <div class="name">🥇 黄金(AU)</div>
+        <div class="price" style="font-size:18px;">--</div>
+        <div class="chg" style="font-size:12px;">避险情绪锚</div>
+        <div class="meta"><span>地缘溢价指标</span></div>
+      </div>
+      <div class="idx-card">
+        <div class="name">💰 美元指数</div>
+        <div class="price" style="font-size:18px;">--</div>
+        <div class="chg" style="font-size:12px;">流动性水位</div>
+        <div class="meta"><span>全球资金锚</span></div>
+      </div>
+      <div class="idx-card">
+        <div class="name">🇨🇳 10年国债收益率</div>
+        <div class="price" style="font-size:18px;">--</div>
+        <div class="chg" style="font-size:12px;">国内流动性</div>
+        <div class="meta"><span>政策松紧指标</span></div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding:12px;background:var(--orange-bg);border-radius:8px;font-size:13px;color:var(--orange);">
+      ⚠️ 资金跷跷板核心逻辑：资金永远逐利、永远避险、永远轮转。当前A股走出"V型反转"独立行情，半导体/AI硬件走强，红利/锂电走弱，反映资金从防御向成长切换的初期信号。
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREENING ===== -->
+<div class="tab-content" id="tab-screening">
+  <div class="card">
+    <div class="card-title">A股四层筛选引擎</div>
+    <div class="framework-flow">
+      <div class="flow-step" style="background:var(--red-bg);">
+        <div class="num" style="background:var(--red);color:white;">1</div>
+        <div class="title" style="color:var(--red);">政策定生死</div>
+        <div class="sub">国家大政策方向</div>
+        <div class="content">
+          <div style="margin-bottom:4px;"><span class="tag tag-red">✅ 支持</span> AI/半导体/新能源/出海</div>
+          <div style="margin-bottom:4px;"><span class="tag tag-gray">➖ 中性</span> 消费/医药/金融</div>
+          <div><span class="tag tag-green">❌ 压制</span> 房地产/教培/平台</div>
+        </div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="flow-step" style="background:var(--blue-bg);">
+        <div class="num" style="background:var(--blue);color:white;">2</div>
+        <div class="title" style="color:var(--blue);">行业定强弱</div>
+        <div class="sub">景气度与资金流向</div>
+        <div class="content" id="screening-sectors">
+          <div style="margin-bottom:4px;"><span class="tag tag-red">🔥 高景气</span> 半导体/AI硬件/卫星</div>
+          <div style="margin-bottom:4px;"><span class="tag tag-orange">⚠️ 修复中</span> 新能源/创新药</div>
+          <div><span class="tag tag-green">📉 弱势</span> 传统消费/地产链</div>
+        </div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="flow-step" style="background:var(--purple-bg);">
+        <div class="num" style="background:var(--purple);color:white;">3</div>
+        <div class="title" style="color:var(--purple);">个股定标的</div>
+        <div class="sub">龙头+流动性+机构重仓</div>
+        <div class="content">
+          <div style="margin-bottom:4px;">✅ 龙头企业、流动性强</div>
+          <div style="margin-bottom:4px;">✅ 机构重仓、基本面稳健</div>
+          <div>❌ 杂毛小票、暴雷风险</div>
+        </div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="flow-step" style="background:var(--orange-bg);">
+        <div class="num" style="background:var(--orange);color:white;">4</div>
+        <div class="title" style="color:var(--orange);">时机定买卖</div>
+        <div class="sub">MPI+技术共振</div>
+        <div class="content">
+          <div style="margin-bottom:4px;">短线炒预期 · 中线炒业绩</div>
+          <div style="margin-bottom:4px;">长线炒产业逻辑</div>
+          <div>技术验证资金共识节点</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">主力资金净流入 TOP15 <span class="badge tag-red">资金方向</span></div>
+    <table>
+      <thead><tr><th>#</th><th>代码</th><th>名称</th><th>现价</th><th>涨跌幅</th><th>主力净额(亿)</th><th>行业归属</th></tr></thead>
+      <tbody id="flow-table"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">MACD金叉+放量信号 <span class="badge tag-blue">技术共振</span></div>
+    <table>
+      <thead><tr><th>#</th><th>代码</th><th>名称</th><th>现价</th><th>涨跌幅</th><th>附加信号</th></tr></thead>
+      <tbody id="macd-table"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">核心持仓标的分析</div>
+    <table>
+      <thead><tr><th>标的</th><th>现价</th><th>涨跌</th><th>PE</th><th>PB</th><th>市值(亿)</th><th>换手率</th><th>成交额(亿)</th><th>评估</th></tr></thead>
+      <tbody id="holdings-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== TECHNICAL ===== -->
+<div class="tab-content" id="tab-technical">
+  <div class="card">
+    <div class="card-title">技术分析 · 个股深度</div>
+    <div class="stock-selector" id="stock-selector"></div>
+    <div class="tech-grid" id="tech-grid"></div>
+    <div class="chart-box" style="margin-top:16px;"><canvas id="chart-tech-kline"></canvas></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">MACD指标</div>
+      <div class="chart-box-sm"><canvas id="chart-macd"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">RSI指标</div>
+      <div class="chart-box-sm"><canvas id="chart-rsi"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">支撑压力位与交易区间</div>
+    <table>
+      <thead><tr><th>类型</th><th>价格</th><th>说明</th></tr></thead>
+      <tbody id="sr-table"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">技术分析的正确用法</div>
+    <div style="padding:12px;background:var(--blue-bg);border-radius:8px;font-size:13px;color:var(--blue);margin-bottom:8px;">
+      📌 技术分析不预测未来，只记录当下资金行为。K线、均线、结构、支撑阻力、量能形态，全部是资金博弈的结果，不是涨跌的原因。
+    </div>
+    <div style="padding:12px;background:var(--red-bg);border-radius:8px;font-size:13px;color:var(--red);margin-bottom:8px;">
+      ⚠️ 散户最大亏损根源：用技术信号对抗宏观大趋势。宏观流动性收紧时凭金叉重仓做多 = 骗线+反复止损+越扛越亏。
+    </div>
+    <div style="padding:12px;background:var(--green-bg);border-radius:8px;font-size:13px;color:var(--green);">
+      ✅ 技术分析三个作用：① 确认宏观趋势真假 ② 优化买卖点提升盈亏比 ③ 严格定义止损锁住风险。宏观是道，技术是术。
+    </div>
+  </div>
+</div>
+
+<!-- ===== SIGNALS (DUAL) ===== -->
+<div class="tab-content" id="tab-signals">
+  <div class="card">
+    <div class="card-title">🇨🇳 A股 四维共振交易信号</div>
+    <div class="signal-grid" id="signal-grid-a"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🇭🇰 港股 交易信号</div>
+    <div class="signal-grid" id="signal-grid-hk"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🇨🇳 A股综合交易建议</div>
+    <div id="trade-advice-a"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🇭🇰 港股综合交易建议</div>
+    <div id="trade-advice-hk"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">交易纪律检查清单</div>
+    <table>
+      <thead><tr><th>#</th><th>检查项</th><th>状态</th><th>说明</th></tr></thead>
+      <tbody id="checklist-table"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">A股交易核心逻辑</div>
+    <div class="grid-3">
+      <div style="padding:16px;border-radius:8px;background:var(--red-bg);">
+        <div style="font-weight:700;color:var(--red);margin-bottom:8px;">短线行情</div>
+        <div style="font-size:13px;">炒预期：市场悲观、预期见底、技术低位企稳 → 预期修复博弈机会</div>
+      </div>
+      <div style="padding:16px;border-radius:8px;background:var(--blue-bg);">
+        <div style="font-weight:700;color:var(--blue);margin-bottom:8px;">中线行情</div>
+        <div style="font-size:13px;">炒业绩：市场乐观、业绩落地、趋势延续 → 业绩兑现持仓机会</div>
+      </div>
+      <div style="padding:16px;border-radius:8px;background:var(--purple-bg);">
+        <div style="font-weight:700;color:var(--purple);margin-bottom:8px;">长线行情</div>
+        <div style="font-size:13px;">炒产业逻辑：产业趋势确立、政策持续支持 → 吃完整段产业红利</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FLOW ===== -->
+<div class="tab-content" id="tab-flow">
+  <div class="card">
+    <div class="card-title">主力资金净流入排行</div>
+    <div class="chart-box"><canvas id="chart-flow"></canvas></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">主力净流入 TOP10</div>
+      <table>
+        <thead><tr><th>#</th><th>名称</th><th>涨跌</th><th>净额(亿)</th></tr></thead>
+        <tbody id="flow-top10"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">资金流向行业分布</div>
+      <table>
+        <thead><tr><th>行业方向</th><th>代表标的</th><th>信号</th></tr></thead>
+        <tbody id="industry-flow"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TECH SECTORS ===== -->
+<div class="tab-content" id="tab-tech">
+  <div class="card">
+    <div class="card-title">科技前沿赛道 · 实时热力图 <span class="badge tag-purple">通达信数据驱动</span></div>
+    <div class="chart-box" style="height:240px;"><canvas id="chart-tech-heat"></canvas></div>
+    <div style="margin-top:8px;font-size:11px;color:var(--text-secondary);">按当日涨跌幅排序 · 红涨绿跌（A股惯例）· 数据来源：通达信板块指数/ETF/个股实时行情</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">9大科技赛道全景 <span class="badge tag-blue">赛道定结构</span></div>
+    <div class="grid-3" id="tech-sector-cards"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">赛道逻辑与策略定位</div>
+    <table>
+      <thead><tr><th>赛道</th><th>代码/标的</th><th>类型</th><th>当日</th><th>核心逻辑</th><th>交易定位</th></tr></thead>
+      <tbody id="tech-sector-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== NEWS ===== -->
+<div class="tab-content" id="tab-news">
+  <div class="card">
+    <div class="card-title">市场宏观资讯 <span class="badge tag-blue">实时更新</span></div>
+    <div id="news-list"></div>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  宏观共振交易系统 v1.0 · 数据来源：通达信 · 仅供研究参考，不构成投资建议
+</div>
+
+<script>
+// ===================== DATA =====================
+const RAW_DATA = JSON.parse(document.getElementById('data-json').textContent);
+
+// ===================== UTILS =====================
+function fmtPct(v) { return (v >= 0 ? '+' : '') + v.toFixed(2) + '%'; }
+function fmtNum(v, d=2) { return v.toFixed(d); }
+function fmtDate(s) { return s.slice(0,4)+'-'+s.slice(4,6)+'-'+s.slice(6,8); }
+function ma(data, n) {
+  const result = [];
+  for (let i = 0; i < data.length; i++) {
+    if (i < n - 1) { result.push(null); continue; }
+    let sum = 0;
+    for (let j = 0; j < n; j++) sum += data[i-j].close;
+    result.push(sum / n);
+  }
+  return result;
+}
+function ema(data, n) {
+  const k = 2 / (n + 1);
+  const result = [data[0]];
+  for (let i = 1; i < data.length; i++) {
+    result.push(data[i] * k + result[i-1] * (1 - k));
+  }
+  return result;
+}
+function calcMACD(closes) {
+  const ema12 = ema(closes, 12);
+  const ema26 = ema(closes, 26);
+  const dif = closes.map((_, i) => ema12[i] - ema26[i]);
+  const dea = ema(dif, 9);
+  const hist = dif.map((d, i) => 2 * (d - dea[i]));
+  return { dif, dea, hist };
+}
+function calcRSI(closes, period=14) {
+  const rsi = [50];
+  for (let i = 1; i < closes.length; i++) {
+    let gains = 0, losses = 0;
+    const start = Math.max(1, i - period + 1);
+    for (let j = start; j <= i; j++) {
+      const diff = closes[j] - closes[j-1];
+      if (diff > 0) gains += diff; else losses -= diff;
+    }
+    const avgGain = gains / period;
+    const avgLoss = losses / period;
+    if (avgLoss === 0) rsi.push(100);
+    else rsi.push(100 - 100 / (1 + avgGain / avgLoss));
+  }
+  return rsi;
+}
+function calcBOLL(closes, n=20) {
+  const mid = ma(closes.map(c => ({close: c})), n);
+  const upper = [], lower = [];
+  for (let i = 0; i < closes.length; i++) {
+    if (i < n - 1) { upper.push(null); lower.push(null); continue; }
+    let sum = 0;
+    for (let j = 0; j < n; j++) sum += Math.pow(closes[i-j] - mid[i], 2);
+    const std = Math.sqrt(sum / n);
+    upper.push(mid[i] + 2 * std);
+    lower.push(mid[i] - 2 * std);
+  }
+  return { mid, upper, lower };
+}
+
+// ===================== DUAL MPI CALCULATION =====================
+
+// A股 MPI: 锚定「国内政策周期+国内流动性+产业景气度」
+function calcAShareMPI() {
+  const sh = RAW_DATA.sh_index.data;
+  const closes = sh.map(d => d.close);
+  const ma20 = ma(sh, 20);
+  const ma60 = ma(sh, 60);
+  const volumes = sh.map(d => d.volume);
+  const volAvg5 = volumes.slice(-5).reduce((a,b) => a+b, 0) / 5;
+  const volAvg20 = volumes.slice(-20).reduce((a,b) => a+b, 0) / 20;
+  const lastClose = closes[closes.length - 1];
+  const lastMA20 = ma20[ma20.length - 1];
+  const lastMA60 = ma60[ma60.length - 1];
+  const pmiData = RAW_DATA.macro_pmi;
+  const latestPMI = pmiData[0].value;
+
+  // Factor 1: 政策周期 (25%) - PMI + 政策信号
+  let policyScore = 40 + (latestPMI - 49) * 30;
+  // 政策面宽松加分（基于流动性信号）
+  if (volAvg5 / volAvg20 > 1.1) policyScore += 10;
+  if (lastClose > lastMA20) policyScore += 5;
+  policyScore = Math.max(0, Math.min(100, policyScore));
+
+  // Factor 2: 国内流动性 (20%) - 量能+资金成本
+  const volRatio = volAvg5 / volAvg20;
+  let liquidityScore = 35 + volRatio * 30;
+  // 社融/资金面宽松 proxy
+  if (volRatio > 1.0) liquidityScore += 10;
+  liquidityScore = Math.max(0, Math.min(100, liquidityScore));
+
+  // Factor 3: 产业景气度 (15%) - PMI+工业增加值 proxy
+  let industryScore = 30 + (latestPMI - 49.0) * 40;
+  // 结构性景气加分（半导体/AI流入）
+  const flowCount = RAW_DATA.screener_main_flow.length;
+  if (flowCount > 10) industryScore += 8;
+  industryScore = Math.max(0, Math.min(100, industryScore));
+
+  // Factor 4: 市场趋势 (15%) - 上证 vs MA20/MA60
+  let trendScore = 50;
+  if (lastClose > lastMA20) trendScore += 15;
+  if (lastClose > lastMA60) trendScore += 15;
+  if (lastMA20 > lastMA60) trendScore += 10;
+  trendScore = Math.min(100, trendScore);
+
+  // Factor 5: 资金结构 (15%) - 北向资金+融资余额 proxy
+  const mainFlowTotal = RAW_DATA.screener_main_flow.reduce((a, f) => a + f.flow, 0);
+  let capitalScore = 40 + (mainFlowTotal / 10e8) * 3;
+  if (flowCount > 2000) capitalScore += 10;
+  capitalScore = Math.max(0, Math.min(100, capitalScore));
+
+  // Factor 6: 市场动量 (10%) - 5日/20日涨跌
+  const ret5d = (closes[closes.length-1] / closes[Math.max(0,closes.length-6)] - 1) * 100;
+  const ret20d = (closes[closes.length-1] / closes[Math.max(0,closes.length-21)] - 1) * 100;
+  let momScore = 50 + ret5d * 6 + ret20d * 2;
+  momScore = Math.max(0, Math.min(100, momScore));
+
+  // Weighted A-Share MPI
+  const mpi = policyScore * 0.25 + liquidityScore * 0.20 + industryScore * 0.15 + trendScore * 0.15 + capitalScore * 0.15 + momScore * 0.10;
+
+  const factors = [
+    { name: '政策周期', value: Math.round(policyScore), weight: '25%', sub: 'PMI+政策方向', desc: 'PMI '+latestPMI.toFixed(1)+'%·政策偏松' },
+    { name: '国内流动性', value: Math.round(liquidityScore), weight: '20%', sub: '量能+资金成本', desc: '量比 '+volRatio.toFixed(2)+'·资金面中性偏松' },
+    { name: '产业景气', value: Math.round(industryScore), weight: '15%', sub: 'PMI+行业景气', desc: '半导体/AI硬件景气上行' },
+    { name: '市场趋势', value: Math.round(trendScore), weight: '15%', sub: '上证vs均线', desc: lastClose>lastMA20?'MA20多头':'MA20空头' },
+    { name: '资金结构', value: Math.round(capitalScore), weight: '15%', sub: '主力+融资', desc: '主力净流入'+flowCount+'家' },
+    { name: '市场动量', value: Math.round(momScore), weight: '10%', sub: '5日/20日涨跌', desc: '5日'+ret5d.toFixed(2)+'%·20日'+ret20d.toFixed(2)+'%' },
+  ];
+
+  let zone, color, label, advice;
+  if (mpi >= 65) {
+    zone = '乐观'; color = '#ef4444'; label = '乐观区间';
+    advice = { icon: '🚀', title: '重仓 · 顺势 · 敢持仓', desc: '政策宽松+流动性充裕+产业景气向上。A股交易可顺势拥抱业绩兑现+趋势行情，敢于加仓持仓，吃完整段产业红利。', bg: 'var(--red-bg)' };
+  } else if (mpi >= 40) {
+    zone = '中性'; color = '#f59e0b'; label = '中性区间';
+    advice = { icon: '⚖️', title: '半仓 · 震荡 · 高抛低吸', desc: '政策/流动性/景气三者方向分歧，市场结构分化。操作上高抛低吸，不追高不杀跌，关注高低切换与政策催化的结构性机会。', bg: 'var(--orange-bg)' };
+  } else {
+    zone = '悲观'; color = '#22c55e'; label = '悲观区间';
+    advice = { icon: '🛡️', title: '轻仓 · 防守 · 只做确定性', desc: '政策预期转弱+流动性收紧+景气下行。交易只做预期修复博弈，不追业绩不追趋势，只低吸轻仓试错。', bg: 'var(--green-bg)' };
+  }
+
+  return { mpi, factors, zone, color, label, advice, latestPMI, ret5d, volRatio, lastClose, lastMA20, lastMA60 };
+}
+
+// 港股 MPI: 锚定「全球美元流动性+外资风险偏好+中美双重政策影响」
+function calcHKMPI() {
+  const sh = RAW_DATA.sh_index.data;
+  const cyb = RAW_DATA.cyb_index.data;
+  // 使用恒生科技ETF(513180)净值K线作为港股真实走势替代
+  // 该ETF 100%跟踪恒生科技指数，从A股TDX接口获取完整历史K线
+  const hkTech = RAW_DATA.hk_hstech_etf.data;
+  const closes = hkTech.map(d => d.close);
+  const ma20 = ma(hkTech, 20);
+  const ma60 = ma(hkTech, 60);
+  const lastClose = closes[closes.length - 1];
+  const lastMA20 = ma20[ma20.length - 1];
+  const lastMA60 = ma60[ma60.length - 1];
+  const volumes = hkTech.map(d => d.volume);
+  const volAvg5 = volumes.slice(-5).reduce((a,b) => a+b, 0) / 5;
+  const volAvg20 = volumes.slice(-20).reduce((a,b) => a+b, 0) / 20;
+  const tencent = RAW_DATA.quotes['00700'];
+
+  // Factor 1: 美元流动性 (25%) - 全球资金利率周期
+  // TDX doesn't support macro rates, use proxy: inverse of market stress
+  const ret20d = (closes[closes.length-1] / closes[Math.max(0,closes.length-21)] - 1) * 100;
+  const retMtM = Math.abs(ret20d);
+  let usdScore = 55;
+  // Lower volatility = better liquidity environment
+  if (retMtM < 5) usdScore += 15;
+  else if (retMtM > 12) usdScore -= 20;
+  // Major index positive = risk-on sign
+  if (ret20d > 0) usdScore += 10;
+  usdScore = Math.max(0, Math.min(100, usdScore));
+
+  // Factor 2: 外资风险偏好 (20%) - VIX/美债收益率 proxy
+  const volRatio = volAvg5 / volAvg20;
+  let riskScore = 45;
+  if (volRatio > 1.0) riskScore += 12;
+  if (ret20d > 0) riskScore += 8;
+  // Tencent price action as foreign sentiment proxy
+  if (tencent && tencent.chg > 0) riskScore += 10;
+  if (tencent && tencent.chg < -3) riskScore -= 12;
+  riskScore = Math.max(0, Math.min(100, riskScore));
+
+  // Factor 3: 中美政策共振 (15%) - 行业监管+贸易关系
+  let policyScore = 52;
+  // News-based proxy: neutral-bearish on tech regulation
+  if (tencent && tencent.pe < 16) policyScore += 8; // Low PE = regulatory premium still
+  if (ret20d > 3) policyScore += 8;
+  policyScore = Math.max(0, Math.min(100, policyScore));
+
+  // Factor 4: 市场趋势 (15%) - 恒生 proxy vs MA20/MA60
+  let trendScore = 50;
+  if (lastClose > lastMA20) trendScore += 15;
+  if (lastClose > lastMA60) trendScore += 15;
+  if (lastMA20 > lastMA60) trendScore += 10;
+  trendScore = Math.min(100, trendScore);
+
+  // Factor 5: 南向资金 (15%) - 内地资金流入港股
+  let southFlowScore = 52;
+  if (tencent && tencent.chg > 0) southFlowScore += 8;
+  if (volRatio > 1.0) southFlowScore += 8;
+  southFlowScore = Math.max(0, Math.min(100, southFlowScore));
+
+  // Factor 6: 离岸风险溢价 (10%) - 地缘+汇率波动
+  const volatility = Math.abs(ret20d);
+  let riskPremiumScore = 55;
+  if (volatility < 4) riskPremiumScore += 12;
+  else if (volatility > 10) riskPremiumScore -= 15;
+  riskPremiumScore = Math.max(0, Math.min(100, riskPremiumScore));
+
+  // Weighted HK MPI
+  const mpi = usdScore * 0.25 + riskScore * 0.20 + policyScore * 0.15 + trendScore * 0.15 + southFlowScore * 0.15 + riskPremiumScore * 0.10;
+
+  const factors = [
+    { name: '美元流动性', value: Math.round(usdScore), weight: '25%', sub: '利率+美元周期', desc: '市场波动率'+volatility.toFixed(1)+'%·中性偏宽' },
+    { name: '外资风险偏好', value: Math.round(riskScore), weight: '20%', sub: 'VIX/美债proxy', desc: '腾讯'+tencent.chg.toFixed(1)+'%·量比'+volRatio.toFixed(2) },
+    { name: '中美政策共振', value: Math.round(policyScore), weight: '15%', sub: '监管+贸易', desc: '政策中性·科技监管趋稳' },
+    { name: '市场趋势', value: Math.round(trendScore), weight: '15%', sub: '恒生proxy均线', desc: lastClose>lastMA20?'MA20多头':'MA20空头' },
+    { name: '南向资金', value: Math.round(southFlowScore), weight: '15%', sub: '内地流入港股', desc: '资金温和流入·成交活跃' },
+    { name: '离岸风险溢价', value: Math.round(riskPremiumScore), weight: '10%', sub: '地缘+汇率', desc: '波动率'+volatility.toFixed(1)+'%·溢价中性' },
+  ];
+
+  let zone, color, label, advice;
+  if (mpi >= 65) {
+    zone = '乐观'; color = '#ef4444'; label = '乐观区间';
+    advice = { icon: '🌊', title: '流动性宽松 · 高弹性配置', desc: '美元流动性充裕+外资风险偏好回升+中美政策共振偏暖。港股高弹性品种优先，科技/成长板块弹性最大，可重仓配置，容忍汇率波动。', bg: 'var(--red-bg)' };
+  } else if (mpi >= 40) {
+    zone = '中性'; color = '#f59e0b'; label = '中性区间';
+    advice = { icon: '⚓', title: '结构性配置 · 防御成长兼顾', desc: '全球流动性方向不明+外资风险偏好分化+政策面多空交织。港股操作建议防御成长兼顾，逢低布局高股息+科技龙头，控制汇率敞口。', bg: 'var(--orange-bg)' };
+  } else {
+    zone = '悲观'; color = '#22c55e'; label = '悲观区间';
+    advice = { icon: '🧊', title: '降低敞口 · 避险优先', desc: '美元流动性收紧+外资大幅流出+地缘风险抬升+政策压制。港股优先减仓，规避高Beta品种，转向高股息+现金，减少汇率暴露。', bg: 'var(--green-bg)' };
+  }
+
+  return { mpi, factors, zone, color, label, advice, usdScore, riskScore, policyScore, trendScore };
+}
+
+// ===================== RENDER =====================
+let mpiAShare = null;
+let mpiHK = null;
+let currentStock = 'sh_index';
+let charts = {};
+
+function renderHeader() {
+  document.getElementById('header-date').textContent = '数据日期: ' + fmtDate(RAW_DATA.sh_index.data[RAW_DATA.sh_index.data.length-1].date);
+  mpiAShare = calcAShareMPI();
+  mpiHK = calcHKMPI();
+  document.getElementById('mpi-a-dot').style.background = mpiAShare.color;
+  document.getElementById('mpi-a-text').textContent = 'A股 MPI ' + mpiAShare.mpi.toFixed(1) + ' · ' + mpiAShare.zone;
+  document.getElementById('mpi-a-badge').style.background = mpiAShare.color + '22';
+  document.getElementById('mpi-hk-dot').style.background = mpiHK.color;
+  document.getElementById('mpi-hk-text').textContent = '港股 MPI ' + mpiHK.mpi.toFixed(1) + ' · ' + mpiHK.zone;
+  document.getElementById('mpi-hk-badge').style.background = mpiHK.color + '22';
+}
+
+function renderIdxCards() {
+  const q = RAW_DATA.quotes;
+  const cards = [
+    { name: '上证指数', code: '000001', price: q['000001'].price, chg: q['000001'].chg, pe: q['000001'].pe, vol: (q['000001'].vol/10000).toFixed(0)+'亿手', amt: (q['000001'].amount).toFixed(0)+'亿' },
+    { name: '贵州茅台', code: '600519', price: q['600519'].price, chg: q['600519'].chg, pe: q['600519'].pe.toFixed(1), vol: q['600519'].vol.toFixed(0)+'万手', amt: q['600519'].amount.toFixed(1)+'亿' },
+    { name: '宁德时代', code: '300750', price: q['300750'].price, chg: q['300750'].chg, pe: q['300750'].pe.toFixed(1), vol: q['300750'].vol.toFixed(0)+'万手', amt: q['300750'].amount.toFixed(1)+'亿' },
+    { name: '腾讯控股', code: '00700', price: q['00700'].price, chg: q['00700'].chg, pe: q['00700'].pe.toFixed(1), vol: q['00700'].vol.toFixed(0)+'万手', amt: q['00700'].amount.toFixed(1)+'亿' },
+  ];
+  const html = cards.map(c => `
+    <div class="idx-card">
+      <div class="name">${c.name} · ${c.code}</div>
+      <div class="price ${c.chg >= 0 ? 'up' : 'down'}">${c.price.toFixed(2)}</div>
+      <div class="chg ${c.chg >= 0 ? 'up' : 'down'}">${fmtPct(c.chg)}</div>
+      <div class="meta"><span>PE ${c.pe}</span><span>${c.vol}</span><span>${c.amt}</span></div>
+    </div>
+  `).join('');
+  document.getElementById('idx-cards').innerHTML = html;
+}
+
+function renderMPI() {
+  // ===== A-Share MPI Panel =====
+  document.getElementById('mpi-val-a').textContent = mpiAShare.mpi.toFixed(1);
+  document.getElementById('mpi-val-a').style.color = mpiAShare.color;
+  document.getElementById('mpi-label-a').textContent = 'A股 · ' + mpiAShare.label;
+  document.getElementById('mpi-full-badge-a').textContent = mpiAShare.zone + ' · ' + mpiAShare.mpi.toFixed(1);
+  document.getElementById('mpi-full-badge-a').className = 'badge ' + (mpiAShare.zone === '乐观' ? 'tag-red' : mpiAShare.zone === '中性' ? 'tag-orange' : 'tag-green');
+
+  const pctA = mpiAShare.mpi / 100;
+  document.getElementById('gauge-arc-a').style.strokeDashoffset = 534 * (1 - pctA);
+  document.getElementById('gauge-arc-a').style.stroke = mpiAShare.color;
+
+  document.getElementById('mpi-factors-a').innerHTML = mpiAShare.factors.map(f => {
+    const c = f.value >= 65 ? '#ef4444' : f.value >= 40 ? '#f59e0b' : '#22c55e';
+    return `<div class="mpi-factor"><div><div class="fname">${f.name} <span style="font-size:10px;color:var(--gray);">(${f.weight})</span></div><div style="font-size:11px;color:var(--text-secondary);">${f.sub}</div></div><div class="fbar"><div class="fbar-fill" style="width:${f.value}%;background:${c};"></div></div><div class="fval" style="color:${c};">${f.value}</div></div>`;
+  }).join('');
+
+  document.getElementById('pos-advice-a').innerHTML = `<div class="pos-advice" style="background:${mpiAShare.advice.bg};"><div class="icon">${mpiAShare.advice.icon}</div><div class="text"><div class="title" style="color:${mpiAShare.color};">${mpiAShare.advice.title}</div><div class="desc">${mpiAShare.advice.desc}</div></div></div>`;
+
+  // Anchor info
+  document.getElementById('a-anchor-desc').innerHTML = '<b>核心锚定：</b>国内政策周期 + 国内流动性 + 产业景气度<br><b>底层驱动：</b>内资主导(公募/私募/险资/散户)，北向资金为边际变量<br><b>情绪拐点：</b>政策预期差（超预期=乐观，低于预期=悲观）';
+
+  // ===== HK MPI Panel =====
+  document.getElementById('mpi-val-hk').textContent = mpiHK.mpi.toFixed(1);
+  document.getElementById('mpi-val-hk').style.color = mpiHK.color;
+  document.getElementById('mpi-label-hk').textContent = '港股 · ' + mpiHK.label;
+  document.getElementById('mpi-full-badge-hk').textContent = mpiHK.zone + ' · ' + mpiHK.mpi.toFixed(1);
+  document.getElementById('mpi-full-badge-hk').className = 'badge ' + (mpiHK.zone === '乐观' ? 'tag-red' : mpiHK.zone === '中性' ? 'tag-orange' : 'tag-green');
+
+  const pctHK = mpiHK.mpi / 100;
+  document.getElementById('gauge-arc-hk').style.strokeDashoffset = 534 * (1 - pctHK);
+  document.getElementById('gauge-arc-hk').style.stroke = mpiHK.color;
+
+  document.getElementById('mpi-factors-hk').innerHTML = mpiHK.factors.map(f => {
+    const c = f.value >= 65 ? '#ef4444' : f.value >= 40 ? '#f59e0b' : '#22c55e';
+    return `<div class="mpi-factor"><div><div class="fname">${f.name} <span style="font-size:10px;color:var(--gray);">(${f.weight})</span></div><div style="font-size:11px;color:var(--text-secondary);">${f.sub}</div></div><div class="fbar"><div class="fbar-fill" style="width:${f.value}%;background:${c};"></div></div><div class="fval" style="color:${c};">${f.value}</div></div>`;
+  }).join('');
+
+  document.getElementById('pos-advice-hk').innerHTML = `<div class="pos-advice" style="background:${mpiHK.advice.bg};"><div class="icon">${mpiHK.advice.icon}</div><div class="text"><div class="title" style="color:${mpiHK.color};">${mpiHK.advice.title}</div><div class="desc">${mpiHK.advice.desc}</div></div></div>`;
+
+  // Anchor info
+  document.getElementById('hk-anchor-desc').innerHTML = '<b>核心锚定：</b>全球美元流动性 + 外资风险偏好 + 中美双重政策影响<br><b>底层驱动：</b>外资主导(全球对冲基金/主权基金)，跨市场配置决定流向<br><b>情绪拐点：</b>风险溢价（地缘升温=要求高回报率，基本面不变也会杀估值）<br><br><span style="color:#22c55e;">✅ 港股数据来源：恒生指数(HSI)与恒生科技指数(HZ5017)的实时行情有数据，但TDX不直接提供港股指数历史K线。因此使用对应的港股通ETF净值作为100%跟踪替代——恒生指数ETF(513600)与恒生科技ETF(513180)，均从A股通达信接口获取完整K线，与港股指数走势高度一致。</span>';
+
+  // Mini badges in overview
+  document.getElementById('mpi-mini-a-badge').textContent = 'A股MPI ' + mpiAShare.mpi.toFixed(1) + ' · ' + mpiAShare.zone;
+  document.getElementById('mpi-mini-a-badge').className = 'badge ' + (mpiAShare.zone === '乐观' ? 'tag-red' : mpiAShare.zone === '中性' ? 'tag-orange' : 'tag-green');
+  document.getElementById('mpi-mini-hk-badge').textContent = '港股MPI ' + mpiHK.mpi.toFixed(1) + ' · ' + mpiHK.zone;
+  document.getElementById('mpi-mini-hk-badge').className = 'badge ' + (mpiHK.zone === '乐观' ? 'tag-red' : mpiHK.zone === '中性' ? 'tag-orange' : 'tag-green');
+
+  // Macro table (A-share specific)
+  const macroRows = [
+    { name: '制造业PMI', val: mpiAShare.latestPMI + '%', trend: mpiAShare.latestPMI >= 50 ? '↑ 荣枯线上' : '↓ 荣枯线下', signal: mpiAShare.latestPMI >= 50 ? '扩张' : '收缩', tag: mpiAShare.latestPMI >= 50 ? 'tag-red' : 'tag-green' },
+    { name: '上证5日涨幅', val: fmtPct(mpiAShare.ret5d), trend: mpiAShare.ret5d >= 0 ? '↑' : '↓', signal: mpiAShare.ret5d >= 0 ? '偏多' : '偏空', tag: mpiAShare.ret5d >= 0 ? 'tag-red' : 'tag-green' },
+    { name: '量比(5/20日)', val: mpiAShare.volRatio.toFixed(2), trend: mpiAShare.volRatio >= 1 ? '放量' : '缩量', signal: mpiAShare.volRatio >= 1 ? '活跃' : '低迷', tag: mpiAShare.volRatio >= 1 ? 'tag-red' : 'tag-gray' },
+    { name: '价格vs MA20', val: mpiAShare.lastClose.toFixed(2), trend: mpiAShare.lastClose > mpiAShare.lastMA20 ? '在MA20上方' : '在MA20下方', signal: mpiAShare.lastClose > mpiAShare.lastMA20 ? '多头' : '空头', tag: mpiAShare.lastClose > mpiAShare.lastMA20 ? 'tag-red' : 'tag-green' },
+    { name: '价格vs MA60', val: mpiAShare.lastMA60.toFixed(2), trend: mpiAShare.lastClose > mpiAShare.lastMA60 ? '在MA60上方' : '在MA60下方', signal: mpiAShare.lastClose > mpiAShare.lastMA60 ? '中期多头' : '中期空头', tag: mpiAShare.lastClose > mpiAShare.lastMA60 ? 'tag-red' : 'tag-green' },
+  ];
+  document.getElementById('macro-table').innerHTML = macroRows.map(r => `<tr><td>${r.name}</td><td style="font-weight:700;">${r.val}</td><td>${r.trend}</td><td><span class="tag ${r.tag}">${r.signal}</span></td></tr>`).join('');
+}
+
+function renderSHChart() {
+  const sh = RAW_DATA.sh_index.data;
+  if (charts.sh) return; // already rendered
+  const labels = sh.map(d => fmtDate(d.date));
+  const closes = sh.map(d => d.close);
+  const ma5 = ma(sh, 5);
+  const ma20 = ma(sh, 20);
+  const ma60 = ma(sh, 60);
+
+  // Trend badge
+  const lastClose = closes[closes.length-1];
+  const lastMA20 = ma20[ma20.length-1];
+  const badge = document.getElementById('sh-trend-badge');
+  if (lastClose > lastMA20) {
+    badge.textContent = '多头排列 · 价格在MA20上方';
+    badge.className = 'badge tag-red';
+  } else {
+    badge.textContent = '空头排列 · 价格在MA20下方';
+    badge.className = 'badge tag-green';
+  }
+
+  const ctx = document.getElementById('chart-sh').getContext('2d');
+  charts.sh = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: '上证指数', data: closes, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.1 },
+        { label: 'MA5', data: ma5, borderColor: '#f59e0b', borderWidth: 1, pointRadius: 0, fill: false, tension: 0.1 },
+        { label: 'MA20', data: ma20, borderColor: '#8b5cf6', borderWidth: 1, pointRadius: 0, fill: false, tension: 0.1 },
+        { label: 'MA60', data: ma60, borderColor: '#22c55e', borderWidth: 1, pointRadius: 0, fill: false, tension: 0.1 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { size: 11 } } } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 10, font: { size: 10 } }, grid: { display: false } },
+        y: { ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+function renderPMIChart(canvasId, full=false) {
+  const pmi = RAW_DATA.macro_pmi.slice().reverse();
+  const labels = pmi.map(d => d.date.slice(0,4)+'-'+d.date.slice(4,6));
+  const vals = pmi.map(d => d.value);
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: '制造业PMI', data: vals,
+        borderColor: '#3b82f6', borderWidth: 2, pointRadius: full ? 3 : 0,
+        fill: { target: 'origin', above: 'rgba(239,68,68,0.05)', below: 'rgba(34,197,94,0.05)' },
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, annotation: full ? { annotations: { line50: { type: 'line', yMin: 50, yMax: 50, borderColor: '#ef4444', borderWidth: 2, borderDash: [5,5] } } } : {} },
+      scales: {
+        x: { ticks: { maxTicksLimit: full ? 12 : 6, font: { size: 10 } }, grid: { display: false } },
+        y: { min: 47, max: 53, ticks: { font: { size: 10 }, callback: v => v + '%' },
+          grid: { color: ctx => ctx.tick.value === 50 ? '#ef4444' : '#e2e8f0', lineWidth: ctx => ctx.tick.value === 50 ? 2 : 1 } }
+      }
+    }
+  });
+}
+
+
+function renderSeesaw() {
+  // Calculate tilt based on MPI
+  const tilt = (mpiAShare.mpi - 50) / 50 * 15; // degrees
+  const bar = document.getElementById('seesaw-bar');
+  bar.style.transform = `rotate(${tilt}deg)`;
+  let tiltText;
+  if (tilt > 3) tiltText = '⚠️ 偏向风险资产';
+  else if (tilt < -3) tiltText = '⚠️ 偏向避险资产';
+  else tiltText = '⚖️ 相对均衡';
+  document.getElementById('seesaw-tilt').textContent = tiltText;
+  document.getElementById('seesaw-tilt').style.color = mpiAShare.color;
+
+  // Rotation table
+  const rotations = [
+    { dir: '半导体/AI硬件', stock: '华天科技/海光信息/紫光股份', chg: '+6.66%', signal: '🔥 主力大幅流入', tag: 'tag-red' },
+    { dir: '航天军工', stock: '中国卫星/航天电器', chg: '+10.00%', signal: '🔥 资金集中涌入', tag: 'tag-red' },
+    { dir: '新能源', stock: '比亚迪/宁德时代', chg: '分化', signal: '⚠️ 比亚迪强/宁德弱', tag: 'tag-orange' },
+    { dir: '红利防御', stock: '煤炭/银行', chg: '微涨', signal: '📉 资金流出走弱', tag: 'tag-green' },
+    { dir: '消费医药', stock: '创新药概念', chg: '活跃', signal: '➖ 结构性机会', tag: 'tag-gray' },
+  ];
+  document.getElementById('rotation-table').innerHTML = rotations.map(r => `
+    <tr><td style="font-weight:600;">${r.dir}</td><td>${r.stock}</td><td>${r.chg}</td><td><span class="tag ${r.tag}">${r.signal}</span></td></tr>
+  `).join('');
+
+  // Compare chart: 上证 vs 恒生指数(ETF) vs 恒生科技(ETF)
+  const sh = RAW_DATA.sh_index.data;
+  const hsiEtf = RAW_DATA.hk_hsi_etf.data;
+  const hkTechEtf = RAW_DATA.hk_hstech_etf.data;
+  const labels = sh.map(d => fmtDate(d.date));
+  const shRet = sh.map(d => d.close / sh[0].close * 100);
+  const hsiRet = hsiEtf.map(d => d.close / hsiEtf[0].close * 100);
+  const hkTechRet = hkTechEtf.map(d => d.close / hkTechEtf[0].close * 100);
+  const ctx = document.getElementById('chart-compare').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: '上证指数(归一)', data: shRet, borderColor: '#ef4444', borderWidth: 2, pointRadius: 0, tension: 0.1 },
+        { label: '恒生指数ETF(归一)', data: hsiRet, borderColor: '#f59e0b', borderWidth: 2, pointRadius: 0, tension: 0.1 },
+        { label: '恒生科技ETF(归一)', data: hkTechRet, borderColor: '#14b8a6', borderWidth: 2, pointRadius: 0, tension: 0.1 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { size: 11 } } } },
+      scales: { x: { ticks: { maxTicksLimit: 8, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { font: { size: 10 } } } }
+    }
+  });
+}
+
+function renderScreening() {
+  // Flow table
+  document.getElementById('flow-table').innerHTML = RAW_DATA.screener_main_flow.map((s, i) => {
+    const industries = { '002185': '半导体封装', '301583': '半导体设备', '300475': '半导体', '600118': '航天军工', '300065': '海洋信息', '002202': '风电', '000938': 'ICT设备', '688041': 'AI芯片', '600879': '航天电器', '002594': '新能源汽车', '002241': '消费电子', '603019': '算力', '603083': '光通信', '600519': '白酒', '600410': 'IT服务' };
+    return `
+      <tr>
+        <td>${i+1}</td>
+        <td>${s.code}</td>
+        <td style="font-weight:600;">${s.name}</td>
+        <td>${s.price.toFixed(2)}</td>
+        <td class="${s.chg >= 0 ? 'up' : 'down'}">${fmtPct(s.chg)}</td>
+        <td style="font-weight:700;color:var(--red);">${s.flow.toFixed(2)}</td>
+        <td>${industries[s.code] || '--'}</td>
+      </tr>
+    `;
+  }).join('');
+
+  // MACD table
+  document.getElementById('macd-table').innerHTML = RAW_DATA.screener_macd.map((s, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td>${s.code}</td>
+      <td style="font-weight:600;">${s.name}</td>
+      <td>${s.price.toFixed(2)}</td>
+      <td class="${s.chg >= 0 ? 'up' : 'down'}">${fmtPct(s.chg)}</td>
+      <td><span class="tag tag-blue">MACD金叉</span> <span class="tag tag-orange">放量</span></td>
+    </tr>
+  `).join('');
+
+  // Holdings table - 用户核心持仓：腾讯、索菱股份
+  const q = RAW_DATA.quotes;
+  const holdings = [
+    { ...q['00700'], assessment: 'PE 15.9估值合理，港股科技龙头受美元流动性影响，当前MPI中性区间适合逢低布局' },
+    { ...q['002766'], assessment: 'PE负值(亏损状态)，PB 1.24偏低，汽车零部件行业，关注业绩拐点与行业景气修复' },
+  ];
+  document.getElementById('holdings-table').innerHTML = holdings.map(h => `
+    <tr>
+      <td style="font-weight:600;">${h.name}</td>
+      <td>${h.price.toFixed(2)}</td>
+      <td class="${h.chg >= 0 ? 'up' : 'down'}">${fmtPct(h.chg)}</td>
+      <td>${h.pe.toFixed(1)}</td>
+      <td>${h.pb.toFixed(2)}</td>
+      <td>${h.mv.toFixed(0)}</td>
+      <td>${h.hsl.toFixed(2)}%</td>
+      <td>${h.amount.toFixed(1)}</td>
+      <td style="font-size:12px;">${h.assessment}</td>
+    </tr>
+  `).join('');
+
+  // 科技赛道强弱动态标注（行业定强弱层）
+  const secEl = document.getElementById('screening-sectors');
+  const ts = RAW_DATA.tech_sectors;
+  if (secEl && ts) {
+    const order = ['quantum','ai_app','ai_hw','chip_eq','space','fusion','nuclear','newenergy','gochina'];
+    secEl.innerHTML = order.map(k => {
+      const s = ts[k];
+      const up = s.chg >= 0;
+      const tag = s.chg >= 1 ? 'tag-red' : s.chg >= 0 ? 'tag-orange' : 'tag-green';
+      const icon = s.chg >= 1 ? '🔥' : s.chg >= 0 ? '➖' : '📉';
+      const label = s.chg >= 1 ? '强势' : s.chg >= 0 ? '平稳' : '弱势';
+      return `<div style="margin-bottom:4px;"><span class="tag ${tag}">${icon} ${label}</span> ${s.name} <span style="font-size:11px;color:${up?'var(--red)':'var(--green)'};">${fmtPct(s.chg)}</span></div>`;
+    }).join('');
+  }
+}
+
+function renderTechnical() {
+  const stocks = [
+    { key: 'sh_index', label: '上证指数', data: RAW_DATA.sh_index.data },
+    { key: 'sz_index', label: '深证成指', data: RAW_DATA.sz_index.data },
+    { key: 'cyb_index', label: '创业板指', data: RAW_DATA.cyb_index.data },
+  ];
+
+  const selector = document.getElementById('stock-selector');
+  selector.innerHTML = stocks.map(s => `<div class="stock-btn ${s.key === currentStock ? 'active' : ''}" data-stock="${s.key}">${s.label}</div>`).join('');
+  selector.querySelectorAll('.stock-btn').forEach(btn => {
+    btn.onclick = () => {
+      currentStock = btn.dataset.stock;
+      selector.querySelectorAll('.stock-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTechnicalDetail();
+    };
+  });
+
+  renderTechnicalDetail();
+}
+
+function renderTechnicalDetail() {
+  // Find stock data
+  let stockData;
+  if (currentStock === 'sh_index') stockData = RAW_DATA.sh_index.data;
+  else if (currentStock === 'sz_index') stockData = RAW_DATA.sz_index.data;
+  else if (currentStock === 'cyb_index') stockData = RAW_DATA.cyb_index.data;
+
+  const closes = stockData.map(d => d.close);
+  const labels = stockData.map(d => fmtDate(d.date));
+  const ma5 = ma(stockData, 5);
+  const ma10 = ma(stockData, 10);
+  const ma20 = ma(stockData, 20);
+  const ma60 = ma(stockData, 60);
+  const { dif, dea, hist } = calcMACD(closes);
+  const rsi = calcRSI(closes);
+  const boll = calcBOLL(closes);
+
+  // Tech grid
+  const lastClose = closes[closes.length-1];
+  const lastMA5 = ma5[ma5.length-1];
+  const lastMA20 = ma20[ma20.length-1];
+  const lastMA60 = ma60[ma60.length-1];
+  const lastDIF = dif[dif.length-1];
+  const lastDEA = dea[dea.length-1];
+  const lastRSI = rsi[rsi.length-1];
+  const lastHist = hist[hist.length-1];
+  const macdCross = dif[dif.length-1] > dea[dea.length-1] && dif[dif.length-2] <= dea[dea.length-2] ? '金叉' : dif[dif.length-1] < dea[dea.length-1] && dif[dif.length-2] >= dea[dea.length-2] ? '死叉' : lastDIF > lastDEA ? '多头' : '空头';
+  const rsiSig = lastRSI > 70 ? '超买' : lastRSI < 30 ? '超卖' : lastRSI > 50 ? '偏强' : '偏弱';
+
+  document.getElementById('tech-grid').innerHTML = `
+    <div class="tech-cell"><div class="label">现价</div><div class="value">${lastClose.toFixed(2)}</div><div class="signal">${lastClose > lastMA5 ? '在MA5上方' : '在MA5下方'}</div></div>
+    <div class="tech-cell"><div class="label">MA5</div><div class="value">${lastMA5.toFixed(2)}</div><div class="signal ${lastClose > lastMA5 ? 'up' : 'down'}">${lastClose > lastMA5 ? '↑' : '↓'}</div></div>
+    <div class="tech-cell"><div class="label">MA20</div><div class="value">${lastMA20.toFixed(2)}</div><div class="signal ${lastClose > lastMA20 ? 'up' : 'down'}">${lastClose > lastMA20 ? '↑' : '↓'}</div></div>
+    <div class="tech-cell"><div class="label">MA60</div><div class="value">${lastMA60.toFixed(2)}</div><div class="signal ${lastClose > lastMA60 ? 'up' : 'down'}">${lastClose > lastMA60 ? '↑' : '↓'}</div></div>
+    <div class="tech-cell"><div class="label">MACD</div><div class="value" style="font-size:13px;">${macdCross}</div><div class="signal ${macdCross === '金叉' || macdCross === '多头' ? 'up' : 'down'}">DIF ${lastDIF > 0 ? '+' : ''}${lastDIF.toFixed(2)}</div></div>
+    <div class="tech-cell"><div class="label">RSI(14)</div><div class="value">${lastRSI.toFixed(1)}</div><div class="signal ${lastRSI > 50 ? 'up' : 'down'}">${rsiSig}</div></div>
+  `;
+
+  // K-line chart with BOLL
+  if (charts.techKline) charts.techKline.destroy();
+  const ctx = document.getElementById('chart-tech-kline').getContext('2d');
+  charts.techKline = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: '收盘价', data: closes, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.1 },
+        { label: 'MA5', data: ma5, borderColor: '#f59e0b', borderWidth: 1, pointRadius: 0, fill: false },
+        { label: 'MA20', data: ma20, borderColor: '#8b5cf6', borderWidth: 1, pointRadius: 0, fill: false },
+        { label: 'MA60', data: ma60, borderColor: '#22c55e', borderWidth: 1, pointRadius: 0, fill: false },
+        { label: 'BOLL上轨', data: boll.upper, borderColor: '#ef4444', borderWidth: 1, borderDash: [3,3], pointRadius: 0, fill: false },
+        { label: 'BOLL下轨', data: boll.lower, borderColor: '#22c55e', borderWidth: 1, borderDash: [3,3], pointRadius: 0, fill: false },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { size: 10 } } } },
+      scales: { x: { ticks: { maxTicksLimit: 10, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { font: { size: 10 } } } }
+    }
+  });
+
+  // MACD chart
+  if (charts.macd) charts.macd.destroy();
+  const ctxMacd = document.getElementById('chart-macd').getContext('2d');
+  charts.macd = new Chart(ctxMacd, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'MACD柱', data: hist, backgroundColor: hist.map(h => h >= 0 ? 'rgba(239,68,68,0.6)' : 'rgba(34,197,94,0.6)'), borderWidth: 0, type: 'bar', order: 3 },
+        { label: 'DIF', data: dif, borderColor: '#3b82f6', borderWidth: 1.5, pointRadius: 0, type: 'line', tension: 0.1, order: 1 },
+        { label: 'DEA', data: dea, borderColor: '#f59e0b', borderWidth: 1.5, pointRadius: 0, type: 'line', tension: 0.1, order: 2 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { size: 10 } } } },
+      scales: { x: { ticks: { maxTicksLimit: 8, font: { size: 9 } }, grid: { display: false } }, y: { ticks: { font: { size: 9 } } } }
+    }
+  });
+
+  // RSI chart
+  if (charts.rsi) charts.rsi.destroy();
+  const ctxRsi = document.getElementById('chart-rsi').getContext('2d');
+  charts.rsi = new Chart(ctxRsi, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'RSI(14)', data: rsi,
+        borderColor: '#8b5cf6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 8, font: { size: 9 } }, grid: { display: false } },
+        y: { min: 0, max: 100, ticks: { font: { size: 9 } },
+          grid: { color: ctx => (ctx.tick.value === 70 || ctx.tick.value === 30) ? '#cbd5e1' : '#f1f5f9' } }
+      }
+    }
+  });
+
+  // Support/Resistance
+  const high20 = Math.max(...stockData.slice(-20).map(d => d.high));
+  const low20 = Math.min(...stockData.slice(-20).map(d => d.low));
+  const high60 = Math.max(...stockData.map(d => d.high));
+  const low60 = Math.min(...stockData.map(d => d.low));
+  const bollUp = boll.upper[boll.upper.length-1];
+  const bollLow = boll.lower[boll.lower.length-1];
+  const bollMid = boll.mid[boll.mid.length-1];
+
+  document.getElementById('sr-table').innerHTML = `
+    <tr><td><span class="tag tag-red">强压力</span></td><td>${high60.toFixed(2)}</td><td>60日最高点</td></tr>
+    <tr><td><span class="tag tag-orange">BOLL上轨</span></td><td>${bollUp.toFixed(2)}</td><td>布林带上轨压力</td></tr>
+    <tr><td><span class="tag tag-orange">短期压力</span></td><td>${high20.toFixed(2)}</td><td>20日最高点</td></tr>
+    <tr><td><span class="tag tag-blue">BOLL中轨</span></td><td>${bollMid.toFixed(2)}</td><td>布林带中轨(MA20)</td></tr>
+    <tr><td><span class="tag tag-gray">当前价</span></td><td style="font-weight:700;">${lastClose.toFixed(2)}</td><td>最新收盘价</td></tr>
+    <tr><td><span class="tag tag-orange">短期支撑</span></td><td>${low20.toFixed(2)}</td><td>20日最低点</td></tr>
+    <tr><td><span class="tag tag-green">BOLL下轨</span></td><td>${bollLow.toFixed(2)}</td><td>布林带下轨支撑</td></tr>
+    <tr><td><span class="tag tag-green">强支撑</span></td><td>${low60.toFixed(2)}</td><td>60日最低点</td></tr>
+  `;
+}
+
+function renderSignals() {
+  const sh = RAW_DATA.sh_index.data;
+  const closes = sh.map(d => d.close);
+  const ma20 = ma(sh, 20);
+  const ma60 = ma(sh, 60);
+  const { dif, dea } = calcMACD(closes);
+  const rsi = calcRSI(closes);
+  const lastClose = closes[closes.length-1];
+  const lastMA20 = ma20[ma20.length-1];
+  const lastMA60 = ma60[ma60.length-1];
+  const lastDIF = dif[dif.length-1];
+  const lastDEA = dea[dea.length-1];
+  const lastRSI = rsi[rsi.length-1];
+
+  // === A-Share Signal ===
+  const aMacroStatus = mpiAShare.zone;
+  const aMacroIcon = aMacroStatus === '乐观' ? '🚀' : aMacroStatus === '中性' ? '⚖️' : '🛡️';
+  const aMacroClass = aMacroStatus === '乐观' ? 'signal-bull' : aMacroStatus === '中性' ? 'signal-neutral' : 'signal-bear';
+  const aMacroSignal = aMacroStatus === '乐观' ? '看多' : aMacroStatus === '中性' ? '中性' : '看空';
+  const aSectorStatus = '成长占优';
+  const aSectorClass = 'signal-bull';
+  const aSectorSignal = '看多';
+  let aTechStatus, aTechClass, aTechSignal;
+  if (lastClose > lastMA20 && lastMA20 > lastMA60 && lastDIF > lastDEA) { aTechStatus='多头排列'; aTechClass='signal-bull'; aTechSignal='看多'; }
+  else if (lastClose < lastMA20 && lastMA20 < lastMA60 && lastDIF < lastDEA) { aTechStatus='空头排列'; aTechClass='signal-bear'; aTechSignal='看空'; }
+  else { aTechStatus='震荡格局'; aTechClass='signal-neutral'; aTechSignal='中性'; }
+  const aResonance = (aMacroStatus==='乐观'?1:aMacroStatus==='中性'?0:-1)+(aTechSignal==='看多'?1:aTechSignal==='看空'?-1:0);
+  let aExecStatus, aExecClass, aExecSignal;
+  if (aResonance>=2) { aExecStatus='共振做多'; aExecClass='signal-bull'; aExecSignal='买入'; }
+  else if (aResonance<=-2) { aExecStatus='共振做空'; aExecClass='signal-bear'; aExecSignal='卖出'; }
+  else { aExecStatus='观望等待'; aExecClass='signal-neutral'; aExecSignal='观望'; }
+
+  // === HK Signal ===
+  const hkMacroStatus = mpiHK.zone;
+  const hkMacroIcon = hkMacroStatus === '乐观' ? '🌊' : hkMacroStatus === '中性' ? '⚓' : '🧊';
+  const hkMacroClass = hkMacroStatus === '乐观' ? 'signal-bull' : hkMacroStatus === '中性' ? 'signal-neutral' : 'signal-bear';
+  const hkMacroSignal = hkMacroStatus === '乐观' ? '看多' : hkMacroStatus === '中性' ? '中性' : '看空';
+  let hkExecStatus, hkExecClass, hkExecSignal;
+  if (hkMacroStatus==='乐观') { hkExecStatus='高弹性配置'; hkExecClass='signal-bull'; hkExecSignal='买入'; }
+  else if (hkMacroStatus==='悲观') { hkExecStatus='降低敞口'; hkExecClass='signal-bear'; hkExecSignal='卖出'; }
+  else { hkExecStatus='结构性配置'; hkExecClass='signal-neutral'; hkExecSignal='持有'; }
+
+  // Render A-Share signals
+  document.getElementById('signal-grid-a').innerHTML = `
+    <div class="signal-box ${aMacroClass}"><div class="icon">${aMacroIcon}</div><div class="title">A股宏观层</div><div class="desc">MPI ${mpiAShare.mpi.toFixed(1)} · ${mpiAShare.label}</div><div class="status" style="background:${mpiAShare.color};color:white;">${aMacroSignal}</div></div>
+    <div class="signal-box ${aSectorClass}"><div class="icon">🎯</div><div class="title">A股赛道层</div><div class="desc">半导体/AI/航天资金流入</div><div class="status" style="background:var(--red);color:white;">${aSectorSignal}</div></div>
+    <div class="signal-box ${aTechClass}"><div class="icon">📈</div><div class="title">A股技术层</div><div class="desc">${aTechStatus} · RSI ${lastRSI.toFixed(0)}</div><div class="status" style="background:${aTechClass==='signal-bull'?'var(--red)':aTechClass==='signal-bear'?'var(--green)':'var(--gray)'};color:white;">${aTechSignal}</div></div>
+    <div class="signal-box ${aExecClass}"><div class="icon">${aExecClass==='signal-bull'?'✅':aExecClass==='signal-bear'?'⛔':'⏸️'}</div><div class="title">A股执行层</div><div class="desc">${aExecStatus}</div><div class="status" style="background:${aExecClass==='signal-bull'?'var(--red)':aExecClass==='signal-bear'?'var(--green)':'var(--gray)'};color:white;">${aExecSignal}</div></div>
+  `;
+
+  // Render HK signals
+  document.getElementById('signal-grid-hk').innerHTML = `
+    <div class="signal-box ${hkMacroClass}"><div class="icon">${hkMacroIcon}</div><div class="title">港股宏观层</div><div class="desc">MPI ${mpiHK.mpi.toFixed(1)} · ${mpiHK.label}</div><div class="status" style="background:${mpiHK.color};color:white;">${hkMacroSignal}</div></div>
+    <div class="signal-box signal-neutral"><div class="icon">🏢</div><div class="title">港股赛道层</div><div class="desc">科技/高股息/消费</div><div class="status" style="background:var(--gray);color:white;">分化</div></div>
+    <div class="signal-box signal-neutral"><div class="icon">💱</div><div class="title">港股外资风向</div><div class="desc">外资风险偏好中性</div><div class="status" style="background:var(--gray);color:white;">中性</div></div>
+    <div class="signal-box ${hkExecClass}"><div class="icon">${hkExecClass==='signal-bull'?'✅':hkExecClass==='signal-bear'?'⛔':'⏸️'}</div><div class="title">港股执行层</div><div class="desc">${hkExecStatus}</div><div class="status" style="background:${hkExecClass==='signal-bull'?'var(--red)':hkExecClass==='signal-bear'?'var(--green)':'var(--gray)'};color:white;">${hkExecSignal}</div></div>
+  `;
+
+  // A-Share trade advice
+  let aAdviceHtml = '';
+  if (aExecSignal === '买入') {
+    aAdviceHtml = `<div class="pos-advice" style="background:var(--red-bg);"><div class="icon">🚀</div><div class="text"><div class="title" style="color:var(--red);">A股共振做多 · 可加仓</div><div class="desc">宏观+赛道+技术三层共振看多。A股MPI ${mpiAShare.mpi.toFixed(1)}处于${mpiAShare.label}，政策宽松+流动性充裕+景气上行。操作：顺势加仓，优先半导体/AI硬件/航天方向，止损设于MA20下方。</div></div></div>`;
+  } else if (aExecSignal === '卖出') {
+    aAdviceHtml = `<div class="pos-advice" style="background:var(--green-bg);"><div class="icon">🛡️</div><div class="text"><div class="title" style="color:var(--green);">A股共振做空 · 减仓防守</div><div class="desc">宏观+技术共振看空。建议减仓至轻仓，规避风险资产，等待MPI回暖信号。</div></div></div>`;
+  } else {
+    aAdviceHtml = `<div class="pos-advice" style="background:var(--orange-bg);"><div class="icon">⚖️</div><div class="text"><div class="title" style="color:var(--orange);">A股信号分歧 · 观望等待</div><div class="desc">四维信号未完全共振。宏观${mpiAShare.zone}，技术${aTechStatus}，赛道偏多但需验证。建议：半仓操作，高抛低吸，不追高。</div></div></div>`;
+  }
+  document.getElementById('trade-advice-a').innerHTML = aAdviceHtml;
+
+  // HK trade advice
+  let hkAdviceHtml = '';
+  if (hkExecSignal === '买入') {
+    hkAdviceHtml = `<div class="pos-advice" style="background:var(--red-bg);"><div class="icon">🌊</div><div class="text"><div class="title" style="color:var(--red);">港股流动性宽松 · 高弹性配置</div><div class="desc">港股MPI ${mpiHK.mpi.toFixed(1)}处于${mpiHK.label}。美元流动性充裕，外资风险偏好回升。优先科技/成长板块，可重仓配置，容忍汇率波动。</div></div></div>`;
+  } else if (hkExecSignal === '卖出') {
+    hkAdviceHtml = `<div class="pos-advice" style="background:var(--green-bg);"><div class="icon">🧊</div><div class="text"><div class="title" style="color:var(--green);">港股降风险 · 避险优先</div><div class="desc">港股MPI ${mpiHK.mpi.toFixed(1)}处于${mpiHK.label}。美元流动性收紧+外资流出。减仓高Beta品种，转向高股息+现金，减少汇率暴露。</div></div></div>`;
+  } else {
+    hkAdviceHtml = `<div class="pos-advice" style="background:var(--orange-bg);"><div class="icon">⚓</div><div class="text"><div class="title" style="color:var(--orange);">港股结构性配置 · 防御成长兼顾</div><div class="desc">港股MPI ${mpiHK.mpi.toFixed(1)}处于${mpiHK.label}。全球流动性方向不明+外资风险偏好分化。建议：逢低布局高股息+科技龙头，控制汇率敞口。</div></div></div>`;
+  }
+  document.getElementById('trade-advice-hk').innerHTML = hkAdviceHtml;
+
+  // A-Share checklist
+  const checklist = [
+    { item: 'A股MPI处于乐观/中性区间', status: aMacroStatus!=='悲观', desc: aMacroStatus==='悲观'?'MPI偏低':'MPI='+mpiAShare.mpi.toFixed(1) },
+    { item: '上证在MA20上方', status: lastClose>lastMA20, desc: '现价'+lastClose.toFixed(0)+' vs MA20 '+lastMA20.toFixed(0) },
+    { item: 'MA20在MA60上方', status: lastMA20>lastMA60, desc: '中期趋势'+(lastMA20>lastMA60?'向上':'向下') },
+    { item: 'MACD多头/金叉', status: lastDIF>lastDEA, desc: 'DIF '+lastDIF.toFixed(1)+' vs DEA '+lastDEA.toFixed(1) },
+    { item: 'RSI未超买(<70)', status: lastRSI<70, desc: 'RSI='+lastRSI.toFixed(1) },
+    { item: 'A股四维共振确认', status: aExecSignal==='买入', desc: aExecStatus },
+    { item: '港股MPI独立审核', status: hkMacroStatus!=='悲观', desc: '港股MPI='+mpiHK.mpi.toFixed(1)+'·'+hkMacroStatus },
+  ];
+  document.getElementById('checklist-table').innerHTML = checklist.map((c, i) => `
+    <tr><td>${i+1}</td><td style="font-weight:500;">${c.item}</td><td><span class="tag ${c.status?'tag-red':'tag-green'}">${c.status?'✅ 通过':'❌ 未通过'}</span></td><td style="font-size:12px;color:var(--text-secondary);">${c.desc}</td></tr>
+  `).join('');
+}
+
+function renderFlow() {
+  // Flow chart
+  const flow = RAW_DATA.screener_main_flow.slice(0, 10);
+  const ctx = document.getElementById('chart-flow').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: flow.map(f => f.name),
+      datasets: [{
+        label: '主力净额(亿)',
+        data: flow.map(f => f.flow),
+        backgroundColor: flow.map(f => f.chg >= 0 ? 'rgba(239,68,68,0.7)' : 'rgba(34,197,94,0.7)'),
+        borderWidth: 0, borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 11 } } } }
+    }
+  });
+
+  // Flow top10 table
+  document.getElementById('flow-top10').innerHTML = flow.map((f, i) => `
+    <tr><td>${i+1}</td><td style="font-weight:600;">${f.name}</td><td class="${f.chg >= 0 ? 'up' : 'down'}">${fmtPct(f.chg)}</td><td style="font-weight:700;color:var(--red);">${f.flow.toFixed(2)}</td></tr>
+  `).join('');
+
+  // Industry flow
+  const industries = [
+    { dir: '半导体', stocks: '华天科技/海光信息/紫光股份', signal: '🔥 大幅流入', tag: 'tag-red' },
+    { dir: 'AI算力', stocks: '中科曙光/剑桥科技', signal: '🔥 持续流入', tag: 'tag-red' },
+    { dir: '航天军工', stocks: '中国卫星/航天电器', signal: '🔥 涨停涌入', tag: 'tag-red' },
+    { dir: '新能源车', stocks: '比亚迪/宁德时代', signal: '⚠️ 分化', tag: 'tag-orange' },
+    { dir: '消费电子', stocks: '歌尔股份', signal: '↑ 流入', tag: 'tag-red' },
+    { dir: '白酒', stocks: '贵州茅台', signal: '↑ 温和流入', tag: 'tag-gray' },
+    { dir: '红利防御', stocks: '煤炭/银行', signal: '↓ 流出', tag: 'tag-green' },
+  ];
+  document.getElementById('industry-flow').innerHTML = industries.map(i => `
+    <tr><td style="font-weight:600;">${i.dir}</td><td>${i.stocks}</td><td><span class="tag ${i.tag}">${i.signal}</span></td></tr>
+  `).join('');
+}
+
+function renderNews() {
+  document.getElementById('news-list').innerHTML = RAW_DATA.news.map(n => `
+    <div class="news-item">
+      <div class="title">${n.title}</div>
+      <div class="meta">${n.time} · ${n.source}</div>
+      <div class="summary">${n.summary}</div>
+    </div>
+  `).join('');
+}
+
+function renderMPIMini() {
+  // A-Share MPI mini
+  const sh = RAW_DATA.sh_index.data;
+  const shCloses = sh.map(d => d.close);
+  const labels = sh.map(d => fmtDate(d.date));
+  const mpiAHist = [];
+  for (let i = 0; i < sh.length; i++) {
+    const c = shCloses.slice(0, i+1);
+    if (c.length < 20) { mpiAHist.push(50); continue; }
+    const m20 = c.slice(-20).reduce((a,b)=>a+b,0)/20;
+    let score = 50;
+    if (c[c.length-1] > m20) score += 15;
+    const r5 = c.length >= 6 ? (c[c.length-1]/c[c.length-6]-1)*100 : 0;
+    score += r5 * 3;
+    mpiAHist.push(Math.max(0, Math.min(100, score)));
+  }
+  const ctxA = document.getElementById('chart-mpi-mini-a').getContext('2d');
+  new Chart(ctxA, {
+    type: 'line',
+    data: { labels, datasets: [{ label: 'A股MPI', data: mpiAHist, borderColor: '#ef4444', borderWidth: 2, pointRadius: 0, fill: { target: 'origin', above: 'rgba(239,68,68,0.1)', below: 'rgba(34,197,94,0.1)' }, tension: 0.3 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { min: 0, max: 100, ticks: { font: { size: 9 } } } } }
+  });
+
+  // HK MPI mini - 用恒生科技ETF净值
+  const hkEtf = RAW_DATA.hk_hstech_etf.data;
+  const hkCloses = hkEtf.map(d => d.close);
+  const mpiHKHist = [];
+  for (let i = 0; i < hkEtf.length; i++) {
+    const c = hkCloses.slice(0, i+1);
+    if (c.length < 20) { mpiHKHist.push(50); continue; }
+    const m20 = c.slice(-20).reduce((a,b)=>a+b,0)/20;
+    let score = 50;
+    if (c[c.length-1] > m20) score += 12;
+    const r5 = c.length >= 6 ? (c[c.length-1]/c[c.length-6]-1)*100 : 0;
+    score += r5 * 4;
+    mpiHKHist.push(Math.max(0, Math.min(100, score)));
+  }
+  const ctxHK = document.getElementById('chart-mpi-mini-hk').getContext('2d');
+  new Chart(ctxHK, {
+    type: 'line',
+    data: { labels, datasets: [{ label: '港股MPI', data: mpiHKHist, borderColor: '#14b8a6', borderWidth: 2, pointRadius: 0, fill: { target: 'origin', above: 'rgba(20,184,166,0.1)', below: 'rgba(34,197,94,0.1)' }, tension: 0.3 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { min: 0, max: 100, ticks: { font: { size: 9 } } } } }
+  });
+}
+
+// ===================== TAB SWITCHING =====================
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    // Lazy-render charts when tab is first opened
+    setTimeout(() => renderTabCharts(tab.dataset.tab), 100);
+  };
+});
+
+// ===================== TECH SECTORS (科技赛道) =====================
+function renderTechSectors() {
+  const ts = RAW_DATA.tech_sectors;
+  if (!ts) return;
+  const keys = Object.keys(ts);
+  const order = ['quantum','ai_app','ai_hw','chip_eq','space','fusion','nuclear','newenergy','gochina'];
+
+  // ----- Cards (sorted by chg desc) -----
+  const sorted = order.map(k => ts[k]).sort((a,b) => b.chg - a.chg);
+  const cardsHtml = sorted.map(s => {
+    const up = s.chg >= 0;
+    const cls = up ? 'up' : 'down';
+    const barPct = Math.min(100, Math.abs(s.chg) / 8 * 100);
+    const barColor = up ? 'var(--red)' : 'var(--green)';
+    return `<div class="idx-card" style="border-left:3px solid ${up?'var(--red)':'var(--green)'};">
+      <div class="name">${s.name} <span style="font-size:10px;color:var(--gray);">${s.type}</span></div>
+      <div class="price ${cls}">${s.price.toFixed(2)}</div>
+      <div class="chg ${cls}">${fmtPct(s.chg)}</div>
+      <div class="meta"><span>${s.code}</span><span>${s.proxy}</span></div>
+      <div style="margin-top:8px;height:4px;background:#e2e8f0;border-radius:2px;overflow:hidden;">
+        <div style="width:${barPct}%;height:100%;background:${barColor};"></div>
+      </div>
+    </div>`;
+  }).join('');
+  const cardsEl = document.getElementById('tech-sector-cards');
+  if (cardsEl) cardsEl.innerHTML = cardsHtml;
+
+  // ----- Logic table -----
+  const logicMap = {
+    quantum:  { logic: '量子通信/计算国产化，政策+科研双驱动，远期空间大但商业化早期', pos: '主题配置·小仓位·事件驱动' },
+    ai_app:   { logic: 'AI从算力转向应用落地，Agent/端侧/行业大模型进入兑现期', pos: '趋势配置·逢低布局·业绩验证' },
+    ai_hw:    { logic: 'AI算力需求刚性，半导体国产替代+全球AI资本开支共振', pos: '核心持仓·回调即买点·中长线' },
+    chip_eq:  { logic: '半导体设备材料国产替代率提升，自主可控战略必选项', pos: '高弹性·波段操作·政策催化' },
+    space:    { logic: '卫星互联网纳入新基建，火箭可回收+低轨星座加速', pos: '政策强支持·主题进攻·高波动' },
+    fusion:   { logic: '可控核聚变实验装置突破，远期能源革命，概念重于业绩', pos: '前沿主题·极小仓位·事件博弈' },
+    nuclear:  { logic: '核电审批加速，AI算力电力刚需+双碳目标，运营稳健', pos: '防御配置·高股息·底仓' },
+    newenergy:{ logic: '光伏/储能供给出清接近尾声，需求端海外+储能接力', pos: '左侧布局·等待拐点·分批建仓' },
+    gochina:  { logic: '中国企业全球化加速，跨境电商/工程机械/品牌出海高景气', pos: '顺周期·业绩驱动·关注汇率' },
+  };
+  const tableHtml = order.map(k => {
+    const s = ts[k];
+    const up = s.chg >= 0;
+    const L = logicMap[k] || { logic: s.note, pos: '观察' };
+    return `<tr>
+      <td style="font-weight:600;">${s.name}</td>
+      <td>${s.code}<br><span style="font-size:11px;color:var(--gray);">${s.proxy}</span></td>
+      <td><span class="tag tag-gray">${s.type}</span></td>
+      <td class="${up?'up':'down'}" style="font-weight:700;">${fmtPct(s.chg)}</td>
+      <td style="font-size:12px;color:var(--text-secondary);max-width:260px;">${L.logic}</td>
+      <td style="font-size:12px;"><span class="tag ${up?'tag-red':'tag-green'}">${L.pos}</span></td>
+    </tr>`;
+  }).join('');
+  const tableEl = document.getElementById('tech-sector-table');
+  if (tableEl) tableEl.innerHTML = tableHtml;
+
+  // ----- Overview mini (top gainers highlighted) -----
+  const miniEl = document.getElementById('tech-overview-mini');
+  if (miniEl) {
+    miniEl.innerHTML = order.map(k => {
+      const s = ts[k];
+      const up = s.chg >= 0;
+      return `<div style="text-align:center;padding:10px;border-radius:8px;background:${up?'var(--red-bg)':'var(--green-bg)'};">
+        <div style="font-size:12px;font-weight:600;color:var(--text);">${s.name}</div>
+        <div class="price ${up?'up':'down'}" style="font-size:18px;margin:4px 0;">${fmtPct(s.chg)}</div>
+        <div style="font-size:10px;color:var(--gray);">${s.proxy}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderTechHeat() {
+  const ts = RAW_DATA.tech_sectors;
+  const el = document.getElementById('chart-tech-heat');
+  if (!el || !ts || charts.techHeat) return;
+  const order = ['quantum','ai_app','ai_hw','chip_eq','space','fusion','nuclear','newenergy','gochina'];
+  const arr = order.map(k => ts[k]).sort((a,b) => a.chg - b.chg); // asc for horizontal bar (bottom=lowest)
+  const labels = arr.map(s => s.name);
+  const data = arr.map(s => s.chg);
+  const colors = arr.map(s => s.chg >= 0 ? '#ef4444' : '#22c55e');
+  const ctx = el.getContext('2d');
+  charts.techHeat = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ label: '当日涨跌幅%', data, backgroundColor: colors, borderRadius: 4 }] },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.parsed.x.toFixed(2) + '%' } } },
+      scales: {
+        x: { min: -8, max: 3, ticks: { font: { size: 10 }, callback: v => v + '%' }, grid: { color: '#f1f5f9' } },
+        y: { ticks: { font: { size: 12 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ===================== INIT =====================
+// Phase 1: Render header + overview tab (visible)
+renderHeader();
+renderIdxCards();
+renderSHChart();
+renderMPIMini();
+renderPMIChart('chart-pmi-mini');
+
+// Phase 2: Pre-render data for hidden tabs (no charts, just DOM content)
+renderMPI();      // Updates MPI gauge text/factors (no canvas dependency)
+renderSeesaw();   // Creates seesaw chart in visible tab
+renderScreening();  // Updates tables only
+renderSignals();    // Updates signal text only  
+renderNews();       // Updates news items
+renderTechSectors(); // Updates tech sector cards + table (no canvas dependency)
+
+// Phase 3: Defer chart rendering for hidden tabs
+// These will render on first tab switch
+let renderedTabs = { overview: true, mpi: false, technical: false, flow: false, tech: false };
+
+function renderTabCharts(tabName) {
+  if (renderedTabs[tabName]) return;
+  renderedTabs[tabName] = true;
+  
+  if (tabName === 'mpi') {
+    renderMPICompare();
+    renderPMIChart('chart-pmi-full', true);
+  }
+  if (tabName === 'technical') {
+    renderTechnical();
+  }
+  if (tabName === 'flow') {
+    renderFlow();
+  }
+  if (tabName === 'tech') {
+    renderTechHeat();
+  }
+}
+function renderMPICompare() {
+  const el = document.getElementById('chart-mpi-compare');
+  if (!el) return;
+  if (charts.mpiCompare) return; // already rendered
+
+  const shD = RAW_DATA.sh_index.data;
+  // 港股用恒生科技ETF净值作为100%跟踪替代
+  const hkD = RAW_DATA.hk_hstech_etf.data;
+  const labels2 = shD.map(d => fmtDate(d.date));
+  const mpiAComp = [];
+  const mpiHKComp = [];
+  for (let i = 0; i < shD.length; i++) {
+    const ca = shD.slice(0, i+1).map(d => d.close);
+    const ch = hkD.slice(0, i+1).map(d => d.close);
+    if (ca.length < 20) { mpiAComp.push(50); mpiHKComp.push(50); continue; }
+    const m20a = ca.slice(-20).reduce((a,b)=>a+b,0)/20;
+    const m20h = ch.slice(-20).reduce((a,b)=>a+b,0)/20;
+    let sa = 50, shk = 50;
+    if (ca[ca.length-1] > m20a) sa += 15;
+    if (ch[ch.length-1] > m20h) shk += 10;
+    const r5a = ca.length>=6 ? (ca[ca.length-1]/ca[ca.length-6]-1)*100 : 0;
+    const r5h = ch.length>=6 ? (ch[ch.length-1]/ch[ch.length-6]-1)*100 : 0;
+    sa += r5a * 3; shk += r5h * 3;
+    mpiAComp.push(Math.max(0,Math.min(100,sa)));
+    mpiHKComp.push(Math.max(0,Math.min(100,shk)));
+  }
+  const ctxCmp = el.getContext('2d');
+  charts.mpiCompare = new Chart(ctxCmp, {
+    type: 'line',
+    data: {
+      labels: labels2,
+      datasets: [
+        { label: 'A股 MPI (上证)', data: mpiAComp, borderColor: '#ef4444', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3 },
+        { label: '港股 MPI (恒生科技ETF)', data: mpiHKComp, borderColor: '#14b8a6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { size: 11 } } },
+        annotation: { annotations: {
+          line65: { type: 'line', yMin: 65, yMax: 65, borderColor: '#ef4444', borderWidth: 1, borderDash: [5,5] },
+          line40: { type: 'line', yMin: 40, yMax: 40, borderColor: '#22c55e', borderWidth: 1, borderDash: [5,5] },
+        } }
+      },
+      scales: { x: { ticks: { maxTicksLimit: 10, font: { size: 10 } }, grid: { display: false } }, y: { min: 0, max: 100, ticks: { font: { size: 10 } } } }
+    }
+  });
+}
+</script>
+
+
+
+</body>
+</html>
