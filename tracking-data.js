@@ -1,10 +1,10 @@
 window.TRACKING_DATA = {
-  "generated_at": "2026-07-18 15:55:19",
+  "generated_at": "2026-07-19 16:03:41",
   "today": {
-    "date": "2026-07-18",
-    "weekday": "周六",
+    "date": "2026-07-19",
+    "weekday": "周日",
     "week": 5,
-    "rhythm": "半天深度块 / 陪伴",
+    "rhythm": "周复盘 + 陪伴",
     "main_task": "",
     "exercise": "",
     "ai_push": "",
@@ -1534,6 +1534,6 @@ window.TRACKING_DATA = {
     "start": "2026-06-17",
     "end": "2026-09-08",
     "total_days": 84,
-    "days_elapsed": 31
+    "days_elapsed": 32
   }
 };
