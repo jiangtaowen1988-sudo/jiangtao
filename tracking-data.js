@@ -1,10 +1,10 @@
 window.TRACKING_DATA = {
-  "generated_at": "2026-07-19 16:03:41",
+  "generated_at": "2026-07-22 15:55:31",
   "today": {
-    "date": "2026-07-19",
-    "weekday": "周日",
-    "week": 5,
-    "rhythm": "周复盘 + 陪伴",
+    "date": "2026-07-22",
+    "weekday": "周三",
+    "week": 6,
+    "rhythm": "关系优先夜",
     "main_task": "",
     "exercise": "",
     "ai_push": "",
@@ -12,7 +12,7 @@ window.TRACKING_DATA = {
     "output": ""
   },
   "week": {
-    "num": 5,
+    "num": 6,
     "exercise": 0,
     "ai": 0,
     "relation": 0,
@@ -21,9 +21,9 @@ window.TRACKING_DATA = {
     "relation_target": 1,
     "days": [
       {
-        "date": "2026-07-15",
+        "date": "2026-07-22",
         "weekday": "周三",
-        "week": 5,
+        "week": 6,
         "rhythm": "关系优先夜",
         "main_task": "",
         "exercise": "",
@@ -35,9 +35,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-07-16",
+        "date": "2026-07-23",
         "weekday": "周四",
-        "week": 5,
+        "week": 6,
         "rhythm": "AI/赚钱项目继续推进",
         "main_task": "",
         "exercise": "",
@@ -49,9 +49,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-07-17",
+        "date": "2026-07-24",
         "weekday": "周五",
-        "week": 5,
+        "week": 6,
         "rhythm": "轻复盘 + 放松",
         "main_task": "",
         "exercise": "",
@@ -63,9 +63,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-07-18",
+        "date": "2026-07-25",
         "weekday": "周六",
-        "week": 5,
+        "week": 6,
         "rhythm": "半天深度块 / 陪伴",
         "main_task": "",
         "exercise": "",
@@ -77,9 +77,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-07-19",
+        "date": "2026-07-26",
         "weekday": "周日",
-        "week": 5,
+        "week": 6,
         "rhythm": "周复盘 + 陪伴",
         "main_task": "",
         "exercise": "",
@@ -91,9 +91,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-07-20",
+        "date": "2026-07-27",
         "weekday": "周一",
-        "week": 5,
+        "week": 6,
         "rhythm": "主业复盘 + AI学习",
         "main_task": "",
         "exercise": "",
@@ -105,9 +105,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-07-21",
+        "date": "2026-07-28",
         "weekday": "周二",
-        "week": 5,
+        "week": 6,
         "rhythm": "AI/赚钱项目推进",
         "main_task": "",
         "exercise": "",
@@ -123,7 +123,11 @@ window.TRACKING_DATA = {
   "streak": {
     "exercise_days": 0
   },
-  "tip": {},
+  "tip": {
+    "tip": "关系优先夜，白天推动内部评审类事项",
+    "focus": "AI座舱内部迭代",
+    "action": "写MRD/PRD/启动节点推进"
+  },
   "work_items": [
     {
       "level": "核心",
@@ -1534,6 +1538,6 @@ window.TRACKING_DATA = {
     "start": "2026-06-17",
     "end": "2026-09-08",
     "total_days": 84,
-    "days_elapsed": 32
+    "days_elapsed": 35
   }
 };
