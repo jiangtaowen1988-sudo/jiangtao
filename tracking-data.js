@@ -1,10 +1,10 @@
 window.TRACKING_DATA = {
-  "generated_at": "2026-07-23 15:55:08",
+  "generated_at": "2026-07-24 15:55:33",
   "today": {
-    "date": "2026-07-23",
-    "weekday": "周四",
+    "date": "2026-07-24",
+    "weekday": "周五",
     "week": 6,
-    "rhythm": "AI/赚钱项目继续推进",
+    "rhythm": "轻复盘 + 放松",
     "main_task": "",
     "exercise": "",
     "ai_push": "",
@@ -124,9 +124,9 @@ window.TRACKING_DATA = {
     "exercise_days": 0
   },
   "tip": {
-    "tip": "推进下一代产品定义收敛",
-    "focus": "8397下一代产品定义",
-    "action": "写8387/Gen5.5定义动作"
+    "tip": "广本全栈获取推进 + 本周主业收口",
+    "focus": "AI座舱全栈项目获取",
+    "action": "写广本或全栈方案推进"
   },
   "work_items": [
     {
@@ -1538,6 +1538,6 @@ window.TRACKING_DATA = {
     "start": "2026-06-17",
     "end": "2026-09-08",
     "total_days": 84,
-    "days_elapsed": 36
+    "days_elapsed": 37
   }
 };
