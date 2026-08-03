@@ -1,5 +1,5 @@
 window.TRACKING_DATA = {
-  "generated_at": "2026-08-03 06:08:31",
+  "generated_at": "2026-08-03 15:55:20",
   "today": {
     "date": "2026-08-03",
     "weekday": "周一",
@@ -203,7 +203,7 @@ window.TRACKING_DATA = {
   "overview": {
     "平衡型时间安排：12 周执行总览": "",
     "开始日期": "2026-06-17",
-    "当前周": "",
+    "当前周": "7",
     "运动完成天数": "",
     "AI/赚钱推进次数": "",
     "高质量陪伴次数": "",
@@ -1422,7 +1422,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "",
+      "passed": "调整",
       "next_tweak": ""
     },
     {
@@ -1446,7 +1446,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "",
+      "passed": "调整",
       "next_tweak": ""
     },
     {
@@ -1458,7 +1458,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "",
+      "passed": "调整",
       "next_tweak": ""
     },
     {
@@ -1470,7 +1470,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "",
+      "passed": "未达标",
       "next_tweak": ""
     },
     {
@@ -1482,7 +1482,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "",
+      "passed": "调整",
       "next_tweak": ""
     },
     {
@@ -1494,7 +1494,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "",
+      "passed": "调整",
       "next_tweak": ""
     },
     {
@@ -1506,7 +1506,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "",
+      "passed": "调整",
       "next_tweak": ""
     },
     {
@@ -1518,7 +1518,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "",
+      "passed": "调整",
       "next_tweak": ""
     },
     {
@@ -1530,7 +1530,7 @@ window.TRACKING_DATA = {
       "ai_count": 0,
       "relation_count": 0,
       "judgment": "",
-      "passed": "",
+      "passed": "调整",
       "next_tweak": ""
     }
   ],
