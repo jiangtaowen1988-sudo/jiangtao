@@ -1,10 +1,10 @@
 window.TRACKING_DATA = {
-  "generated_at": "2026-08-03 15:55:20",
+  "generated_at": "2026-08-04 15:55:11",
   "today": {
-    "date": "2026-08-03",
-    "weekday": "周一",
+    "date": "2026-08-04",
+    "weekday": "周二",
     "week": 7,
-    "rhythm": "主业复盘 + AI学习",
+    "rhythm": "AI/赚钱项目推进",
     "main_task": "",
     "exercise": "",
     "ai_push": "",
@@ -124,9 +124,9 @@ window.TRACKING_DATA = {
     "exercise_days": 0
   },
   "tip": {
-    "tip": "重点工作总盘点，锁定本周一个最关键主业成果",
-    "focus": "全部",
-    "action": "写清本周最重要交付"
+    "tip": "推进CX1/斑马合作或客户材料",
+    "focus": "CX1项目获取",
+    "action": "写CX1或斑马下一步"
   },
   "work_items": [
     {
@@ -1538,6 +1538,6 @@ window.TRACKING_DATA = {
     "start": "2026-06-17",
     "end": "2026-09-08",
     "total_days": 84,
-    "days_elapsed": 47
+    "days_elapsed": 48
   }
 };
