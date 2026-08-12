@@ -1,10 +1,10 @@
 window.TRACKING_DATA = {
-  "generated_at": "2026-08-04 15:55:11",
+  "generated_at": "2026-08-12 16:37:42",
   "today": {
-    "date": "2026-08-04",
-    "weekday": "周二",
-    "week": 7,
-    "rhythm": "AI/赚钱项目推进",
+    "date": "2026-08-12",
+    "weekday": "周三",
+    "week": 9,
+    "rhythm": "关系优先夜",
     "main_task": "",
     "exercise": "",
     "ai_push": "",
@@ -12,7 +12,7 @@ window.TRACKING_DATA = {
     "output": ""
   },
   "week": {
-    "num": 7,
+    "num": 9,
     "exercise": 0,
     "ai": 0,
     "relation": 0,
@@ -21,9 +21,9 @@ window.TRACKING_DATA = {
     "relation_target": 1,
     "days": [
       {
-        "date": "2026-07-29",
+        "date": "2026-08-12",
         "weekday": "周三",
-        "week": 7,
+        "week": 9,
         "rhythm": "关系优先夜",
         "main_task": "",
         "exercise": "",
@@ -35,9 +35,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-07-30",
+        "date": "2026-08-13",
         "weekday": "周四",
-        "week": 7,
+        "week": 9,
         "rhythm": "AI/赚钱项目继续推进",
         "main_task": "",
         "exercise": "",
@@ -49,9 +49,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-07-31",
+        "date": "2026-08-14",
         "weekday": "周五",
-        "week": 7,
+        "week": 9,
         "rhythm": "轻复盘 + 放松",
         "main_task": "",
         "exercise": "",
@@ -63,9 +63,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-08-01",
+        "date": "2026-08-15",
         "weekday": "周六",
-        "week": 7,
+        "week": 9,
         "rhythm": "半天深度块 / 陪伴",
         "main_task": "",
         "exercise": "",
@@ -77,9 +77,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-08-02",
+        "date": "2026-08-16",
         "weekday": "周日",
-        "week": 7,
+        "week": 9,
         "rhythm": "周复盘 + 陪伴",
         "main_task": "",
         "exercise": "",
@@ -91,9 +91,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-08-03",
+        "date": "2026-08-17",
         "weekday": "周一",
-        "week": 7,
+        "week": 9,
         "rhythm": "主业复盘 + AI学习",
         "main_task": "",
         "exercise": "",
@@ -105,9 +105,9 @@ window.TRACKING_DATA = {
         "notes": ""
       },
       {
-        "date": "2026-08-04",
+        "date": "2026-08-18",
         "weekday": "周二",
-        "week": 7,
+        "week": 9,
         "rhythm": "AI/赚钱项目推进",
         "main_task": "",
         "exercise": "",
@@ -124,9 +124,9 @@ window.TRACKING_DATA = {
     "exercise_days": 0
   },
   "tip": {
-    "tip": "推进CX1/斑马合作或客户材料",
-    "focus": "CX1项目获取",
-    "action": "写CX1或斑马下一步"
+    "tip": "关系优先夜，白天推动内部评审类事项",
+    "focus": "AI座舱内部迭代",
+    "action": "写MRD/PRD/启动节点推进"
   },
   "work_items": [
     {
@@ -203,7 +203,7 @@ window.TRACKING_DATA = {
   "overview": {
     "平衡型时间安排：12 周执行总览": "",
     "开始日期": "2026-06-17",
-    "当前周": "7",
+    "当前周": "8",
     "运动完成天数": "",
     "AI/赚钱推进次数": "",
     "高质量陪伴次数": "",
@@ -1481,8 +1481,8 @@ window.TRACKING_DATA = {
       "exercise_days": 0,
       "ai_count": 0,
       "relation_count": 0,
-      "judgment": "",
-      "passed": "调整",
+      "judgment": "W8每日追踪未填写，所有指标为0",
+      "passed": "未达标",
       "next_tweak": ""
     },
     {
@@ -1538,6 +1538,6 @@ window.TRACKING_DATA = {
     "start": "2026-06-17",
     "end": "2026-09-08",
     "total_days": 84,
-    "days_elapsed": 48
+    "days_elapsed": 56
   }
 };
